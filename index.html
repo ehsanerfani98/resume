@@ -1,253 +1,619 @@
-<!DOCTYPE html>
-<!-- saved from url=(0055)https://creativedesignsguru.com/demo/astro-boilerplate/ -->
 <html lang="en">
 
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Astro boilerplate</title>
-  <meta name="description" content="Boilerplate built with Astro using React and Tailwind CSS">
-  <meta name="author" content="Emma">
-
-  <!-- <link rel='alternate' type='application/rss+xml' href='/rss.xml' /> -->
-  <link rel="icon" type="image/x-icon" href="https://creativedesignsguru.com/favicon.ico">
-  <link rel="stylesheet" href="./Astro boilerplate_files/asset.89b639f6.css">
-  <style>
-    undefined
-  </style>
-  <link rel="preconnect" href="https://fonts.googleapis.com/" crossorigin="true">
-  <link rel="preconnect" href="https://fonts.gstatic.com/">
-  <link rel="stylesheet" href="./Astro boilerplate_files/css2">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@200&display=swap" rel="stylesheet">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"
+    integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu" crossorigin="anonymous">
 
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&display=swap');
+
+    :root {
+      --blue: #38B6FF;
+      --chip-image: url("https://lh5.googleusercontent.com/y58mIMZC-IwE41TNehTaXikfD26LtOLULH3BRTAnFxSB33UHwDwf5wVfVvwVwsju1uo=w2400");
+      --whiteish-letters: #dafffd;
+
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-size: 12px;
+      font-family: 'IBM Plex Mono', sans-serif;
+      color: white;
+      font-size: 14px;
+    }
+
     body {
-      font-family: 'Vazirmatn', sans-serif;
+      background-color: black;
+      width: 100vw;
+      height: 100vh;
     }
 
-    .meter {
-      box-sizing: content-box;
-      height: 20px;
-      /* Can be anything */
-      position: relative;
-      margin: 10px 0 30px 0;
-      /* Just for demo spacing */
-      background: #555;
-      border-radius: 25px;
-      padding: 10px;
-      box-shadow: inset 0 -1px 1px rgba(255, 255, 255, 0.3);
-    }
-
-    .meter>span {
-      display: block;
+    main {
+      padding: 50px;
+      width: 100%;
       height: 100%;
-      border-top-right-radius: 8px;
-      border-bottom-right-radius: 8px;
-      border-top-left-radius: 20px;
-      border-bottom-left-radius: 20px;
-      background-color: rgb(43, 194, 83);
-      background-image: linear-gradient(center bottom,
-          rgb(43, 194, 83) 37%,
-          rgb(84, 240, 84) 69%);
-      box-shadow: inset 0 2px 9px rgba(255, 255, 255, 0.3),
-        inset 0 -2px 6px rgba(0, 0, 0, 0.4);
+      display: flex;
+      /*   flex-direction: column; */
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .menu {
+      width: 220px;
+    }
+
+    .menu>button {
+      width: 120px;
+      height: 40px;
+      padding-bottom: 5px;
+      margin-top: 20px;
+      background-color: transparent;
+      background-image: url('https://lh6.googleusercontent.com/B3GZqaB4CtIuOZqveBVoBvWZPBZQ7bkkyTEXs9kBCWaop3KXDi5GaHa_zi9Dekl_igc=w2400');
+      background-size: contain;
+      background-repeat: no-repeat;
+      transition: width 0.3s;
+      border: none;
+    }
+
+    .menu>.btn:hover {
+      color: var(--blue);
+      background-color: transparent;
+      box-shadow: none;
+      width: 140px;
+    }
+
+    .scene {
+      width: 600px;
+      height: 600px;
+      perspective: 1800px;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    .cube {
+      width: 100%;
+      height: 100%;
       position: relative;
-      overflow: hidden;
+      transform-style: preserve-3d;
+      transform: translateZ(-300px);
+      transition: transform 1s;
     }
 
-    .meter>span:after,
-    .animate>span>span {
-      content: "";
+    .cube.show-front {
+      transform: translateZ(-300px) rotateY(0deg);
+    }
+
+    .cube.show-right {
+      transform: translateZ(-300px) rotateY(-90deg);
+    }
+
+    .cube.show-back {
+      transform: translateZ(-300px) rotateY(-180deg);
+    }
+
+    .cube.show-left {
+      transform: translateZ(-300px) rotateY(90deg);
+    }
+
+    .cube.show-top {
+      transform: translateZ(-300px) rotateX(-90deg);
+    }
+
+    .cube.show-bottom {
+      transform: translateZ(-300px) rotateX(90deg);
+    }
+
+    .df.fd-c {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .df.fd-r {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .cube-face {
       position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      background-image: linear-gradient(-45deg,
-          rgba(255, 255, 255, 0.2) 25%,
-          transparent 25%,
-          transparent 50%,
-          rgba(255, 255, 255, 0.2) 50%,
-          rgba(255, 255, 255, 0.2) 75%,
-          transparent 75%,
-          transparent);
-      z-index: 1;
-      background-size: 50px 50px;
-      animation: move 2s linear infinite;
-      border-top-right-radius: 8px;
-      border-bottom-right-radius: 8px;
-      border-top-left-radius: 20px;
-      border-bottom-left-radius: 20px;
+      width: 600px;
+      height: 600px;
+      padding: 40px;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      background-color: rgba(0, 0, 0, 0.8);
+      background-image: var(--chip-image);
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+
+    .cube-face-front {
+      transform: rotateY(0deg) translateZ(300px);
+
+    }
+
+    .intro-wrapper {
+      /*   display: flex; */
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    .image {
+      border-radius: 50%;
+      overflow: hidden;
+      width: 150px;
+      height: 150px;
+      border: 1px dashed var(--blue);
+      /*   display: flex; */
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .image-wrapper {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
       overflow: hidden;
     }
 
-    .animate>span:after {
-      display: none;
+    img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
     }
 
-    @keyframes move {
-      0% {
-        background-position: 0 0;
-      }
-
-      100% {
-        background-position: 50px 50px;
-      }
+    .intro {
+      width: 70%;
+      margin-left: 20px;
     }
 
-    .orange>span {
-      background-image: linear-gradient(#f1a165, #f36d0a);
+    .intro-heading {
+      font-size: 3rem;
+      font-family: 'IBM Plex Mono', monospace;
+      width: 100%;
+      color: var(--whiteish-letters);
+      padding-bottom: 20px;
+      line-height: 3rem;
     }
 
-    .red>span {
-      background-image: linear-gradient(#f0a3a3, #f42323);
+    .intro-heading>span {
+      font-size: inherit;
+      font-family: inherit;
+      color: var(--blue);
     }
 
-    .nostripes>span>span,
-    .nostripes>span::after {
-      background-image: none;
+    .intro-text {
+      color: var(--whiteish-letters);
+      width: 90%;
+      padding: 5px 0;
     }
 
-    #page-wrap {
-      width: 490px;
-      margin: 30px auto;
+    .buttons>button {
+      color: var(--whiteish-letters);
+      border: 2px solid var(--blue);
+      background-color: transparent;
+      padding: 5px 5px;
+      margin: 5px;
+      box-shadow: 0 0 10px var(--blue);
+      transition: box-shadow 0.3s;
     }
 
-    .items-center {
-      align-items: start;
+    button:hover {
+      cursor: pointer;
+      box-shadow: 0 0 15px var(--blue);
+      background-color: var(--blue);
+    }
+
+    .cube-face-back {
+      transform: rotateY(180deg) translateZ(300px);
+    }
+
+    .work-edu-section {
+      margin-bottom: 40px;
+    }
+
+    .work-edu-heading {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 1.5rem;
+      padding-bottom: 10px;
+      font-weight: 400;
+    }
+
+    .work-edu-heading>i {
+      font-size: 1.2rem;
+      color: var(--blue);
+    }
+
+    .work-edu-heading.date {
+      color: var(--blue);
+    }
+
+    .work-edu-info {
+      width: 70%;
+      margin-left: 20px;
+    }
+
+    .work-edu-info>ul {
+      margin-left: 20px;
+    }
+
+    .work-edu-heading.company {
+      width: 100%;
+    }
+
+    .cube-face-right {
+      transform: rotateY(90deg) translateZ(300px);
+    }
+
+    .cube-face-left {
+      transform: rotateY(-90deg) translateZ(300px);
+    }
+
+    .cube-face-top {
+      transform: rotateX(90deg) translateZ(300px);
+    }
+
+    .cube-face-bottom {
+      transform: rotateX(-90deg) translateZ(300px);
+    }
+
+    .social-media-btns {
+      margin-top: 10px;
+      margin-bottom: 40px;
+    }
+
+    .social-media-btns>i {
+      font-size: 2rem;
+      margin: 5px 10px;
+    }
+
+    .social-media-btns>i:hover {
+      cursor: pointer;
+      color: var(--blue);
+    }
+
+    .projects {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .project-border {
+      width: 120px;
+      height: 120px;
+      background-image: url("https://lh5.googleusercontent.com/zgccmEHip1xVXgGhdxVPYB6skDCyHX5LpfqmHHw09nbybd9en_GQdBxOlUlXFSnURks=w2400");
+      background-size: contain;
+      background-repeat: no-repeat;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 10px;
+    }
+
+    .project-wrapper {
+      width: 90px;
+      height: 90px;
+    }
+
+    .visit-wrapper {
+      background-color: rgba(0, 0, 0, 0.5);
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .project-border:nth-of-type(1)>.project-wrapper {
+      background-image: url("https://cdn.pixabay.com/photo/2022/12/10/21/41/social-media-7647812_1280.jpg");
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+
+    .project-border:nth-of-type(2)>.project-wrapper {
+      background-image: url("https://cdn.pixabay.com/photo/2019/11/07/20/48/cinema-4609877_1280.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .project-border:nth-of-type(3)>.project-wrapper {
+      background-image: url("https://cdn.pixabay.com/photo/2017/02/15/13/40/tulips-2068692_1280.jpg");
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+
+    .project-border:nth-of-type(4)>.project-wrapper {
+      background-image: url("https://cdn.pixabay.com/photo/2015/09/03/17/50/cobweb-921039_1280.jpg");
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+
+    .project-border:nth-of-type(5)>.project-wrapper {
+      background-image: url("https://cdn.pixabay.com/photo/2016/02/27/12/40/sculpture-1225487_1280.jpg");
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+
+    .project-border:nth-of-type(6)>.project-wrapper {
+      background-image: url("https://cdn.pixabay.com/photo/2016/10/13/15/23/labyrinth-1738039_1280.jpg");
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+
+    .app-title {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 3px 7px;
+      margin-bottom: 10px;
+    }
+
+    .visit-app {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 5px 5px;
+    }
+
+    .visit-app:hover {
+      text-decoration: underline;
+    }
+
+    .visit-app,
+    .visit-app>i {
+      font-size: 0.8rem;
+    }
+
+    .visit-app>i {
+      color: var(--blue);
+      p
+    }
+
+    .certificate-section {
+      width: 80%;
+      justify-content: start;
+      align-items: center;
+      margin-left: 15px;
+      margin-bottom: 10px;
+    }
+
+    .cube-face-left>div:nth-last-of-type(2) {
+      margin-bottom: 20px;
+    }
+
+    .certificate-date {
+      font-size: 1.5rem;
+      color: var(--blue);
+    }
+
+    .certificate-heading {
+      font-size: 1.5rem;
+      margin-left: 20px;
     }
   </style>
 </head>
 
-
-
-<body class="bg-slate-900 text-gray-100" style="" dir="rtl">
-
-  <div class="mx-auto max-w-screen-lg px-3 py-6 mt-6">
-    <div class="flex flex-col items-center md:flex-row md:justify-between md:gap-x-24">
-      <div>
-        <h1 class="text-3xl font-bold">سلام من احسان باوقار هستم <span
-            class="bg-gradient-to-br from-sky-500 to-cyan-400 bg-clip-text text-transparent"></span> 👋</h1>
-        <p class="mt-6 text-xl leading-9">متولد ۱۱ آبان ۱۳۶۸ | کارشناسی الکترونیک</p>
-        <p class="text-xl leading-9">علاقه مند به برنامه نویسی Backend و طراحی سایت!</p>
-       <hr style="margin: 1rem 0;">
-        <p class="text-xl leading-9">از سال ۸۶ با cms وردپرس کارم را شروع کردم و با سیستم های مختلفی مثل جوملا ، مامبو و
-          phpnuke فعالیتم را ادامه دادم.</p>
-        <p class="text-xl leading-9">فعالیتم را با کدنویسی اختصاصی و طراحی سایت با زبان php و فریم ورک Laravel به صورت
-          حرفه ای تر ادامه دادم و در این مدت سایت های اختصاصی و سامانه های اتوماسیون اداری مختلفی را راه اندازی کردم.
-        </p>
-        <p class="text-xl leading-9">در حال حاضر در زمینه کدنویسی افزونه ها و قالب های اختصاصی وردپرس و همچنین کدنویسی
-          با فریم ورک Laravel مشغول به کار هستم.</p>
-
-
-
-
-      </div>
-      <div class="shrink-0">
-        <img class="h-80 w-64" src="./Astro boilerplate_files/avatar.svg" alt="Avatar image" loading="lazy">
-        <div class="mt-3 flex gap-1 justify-center"><a
-            href=""><img class="h-12 w-12 hover:translate-y-1"
-              src="./Astro boilerplate_files/twitter-icon.png" alt="Twitter icon" loading="lazy"></a><a
-            href=""><img class="h-12 w-12 hover:translate-y-1"
-              src="./Astro boilerplate_files/facebook-icon.png" alt="Facebook icon" loading="lazy"></a><a
-            href=""><img class="h-12 w-12 hover:translate-y-1"
-              src="./Astro boilerplate_files/linkedin-icon.png" alt="Linkedin icon" loading="lazy"></a><a
-            href=""><img class="h-12 w-12 hover:translate-y-1"
-              src="./Astro boilerplate_files/youtube-icon.png" alt="Youtube icon" loading="lazy"></a></div>
-      </div>
+<body>
+  <main>
+    <div class="menu df fd-c">
+      <button class="btn" data-side="front">Intro</button>
+      <button class="btn" data-side="right">Work</button>
+      <button class="btn" data-side="back">Education</button>
+      <button class="btn" data-side="left">Certificates</button>
+      <button class="btn" data-side="top">Projects</button>
+      <button class="btn" data-side="bottom">Contacts</button>
     </div>
-  </div>
-
-
-  <div class="mx-auto max-w-screen-lg px-3 py-6">
-    <div class="flex flex-col gap-6">
-      <div id="" dir="ltr">
-        <h2 class="mb-6 text-3xl" style="text-align: right;direction: rtl;font-weight: bold;color: #22d3ee;">مهارت ها
-          : </h2>
-        <div>
-          <div style="text-align: right;direction: rtl;font-weight: bold;font-size: 20px;" for="">زبان php</div>
-          <div class="meter">
-            <span style="width: 60%"></span>
-          </div>
-        </div>
-        <div>
-          <div style="text-align: right;direction: rtl;font-weight: bold;font-size: 20px;" for="">فریم ورک Laravel
-          </div>
-          <div class="meter">
-            <span style="width: 80%"></span>
-          </div>
-        </div>
-        <div>
-          <div style="text-align: right;direction: rtl;font-weight: bold;font-size: 20px;" for="">کدنویسی اختصاصی قالب
-            و افزونه های وردپرس</div>
-          <div class="meter">
-            <span style="width: 95%"></span>
-          </div>
-        </div>
-        <div>
-          <div style="text-align: right;direction: rtl;font-weight: bold;font-size: 20px;" for="">طراحی با فریم ورک
-            Bootstrap</div>
-          <div class="meter">
-            <span style="width: 100%"></span>
-          </div>
-        </div>
-        <div>
-          <div style="text-align: right;direction: rtl;font-weight: bold;font-size: 20px;" for="">Javascript و jQuery
-          </div>
-          <div class="meter">
-            <span style="width: 86%"></span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <div class="mx-auto max-w-screen-lg px-3 py-6">
-    <div class="mb-6 text-2xl font-bold">برخی از پروژه های انجام شده</div>
-    <div class="flex flex-col gap-6">
-      <div class="flex flex-col items-center gap-x-8 rounded-md bg-slate-800 p-3 md:flex-row">
-
-        <div>
-          <div class="flex flex-col items-center gap-y-2 md:flex-row"><a target="_blank" class="hover:text-cyan-400"
-              href="https://mersiz.com/">
-              <div class="text-xl font-semibold" style="margin-left: 1rem">فروشگاه اینترنتی مرسیز</div>
-            </a>
-            <div class="ml-3 flex gap-2">
-              <div class="rounded-md px-2 py-1 text-xs font-semibold bg-fuchsia-400 text-fuchsia-900">Bootstrap</div>
-              <div class="rounded-md px-2 py-1 text-xs font-semibold bg-indigo-400 text-indigo-900">jQuery</div>
-              <div class="rounded-md px-2 py-1 text-xs font-semibold bg-yellow-400 text-yellow-900">JavaScript</div>
-              <div class="rounded-md px-2 py-1 text-xs font-semibold bg-sky-400 text-sky-900">php</div>
-              <div class="rounded-md px-2 py-1 text-xs font-semibold bg-rose-400 text-rose-900">Laravel</div>
+    <section class="scene">
+      <div class="cube show-front" id="cube" data-side="front">
+        <div class="cube-face cube-face-front">
+          <div class="intro-wrapper df fd-r">
+            <div class="intro">
+              <h1 class="intro-heading">Hi, I'm Lilly, a <span>Frontend</span> Developer</h1>
+              <p class="intro-text">An economics major turned business journalist who found a passion for coding and web
+                development. </p>
+              <p class="intro-text">I started out on the software engineering path two years ago with Python but one
+                look at JavaScript was enough to convince me that web development is going to be my zing.</p>
+            </div>
+            <div class="image df fd-r">
+              <div class="image-wrapper">
+                <img
+                  src="https://images.pexels.com/photos/2726111/pexels-photo-2726111.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                  alt="">
+              </div>
             </div>
           </div>
+
+        </div>
+
+
+        <div class="cube-face cube-face-back">
+          <p class="intro-heading">Educa<span>tion</span></p>
+          <div class="work-edu-section df fd-r">
+            <h4 class="work-edu-heading date">2020-2022</h4>
+            <div class="work-edu-info">
+              <h4 class="work-edu-heading company">Some university</h4>
+              <ul>
+                <li>Lorem ipsum dolor sit amet consectetur adipisicing elit.</li>
+                <li>Ipsam odio repudiandae, enim unde eveniet blanditiis facilis.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="work-edu-section df fd-r">
+            <h4 class="work-edu-heading date">2016-2020</h4>
+            <div class="work-edu-info">
+              <h4 class="work-edu-heading company">Some other uni</h4>
+              <ul>
+                <li>Lorem ipsum dolor sit amet consectetur adipisicing elit.</li>
+                <li>Ipsam odio repudiandae, enim unde eveniet blanditiis facilis.</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+
+        <div class="cube-face cube-face-right">
+          <p class="intro-heading">Wo<span>rk</span></p>
+          <div class="work-edu-section df fd-r">
+            <h4 class="work-edu-heading date">2020-2022</h4>
+            <div class="work-edu-info">
+              <h4 class="work-edu-heading company">Some company</h4>
+              <ul>
+                <li>Lorem ipsum dolor sit amet consectetur adipisicing elit.</li>
+                <li>Ipsam odio repudiandae, enim unde eveniet blanditiis facilis.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="work-edu-section df fd-r">
+            <h4 class="work-edu-heading date">2016-2020</h4>
+            <div class="work-edu-info">
+              <h4 class="work-edu-heading company">Some other company</h4>
+              <ul>
+                <li>Lorem ipsum dolor sit amet consectetur adipisicing elit.</li>
+                <li>Ipsam odio repudiandae, enim unde eveniet blanditiis facilis.</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+
+        <div class="cube-face cube-face-left">
+          <p class="intro-heading">Certi<span>fi</span>cates</p>
+          <div class="certificate-section df fd-r">
+            <h4 class="certificate-date">2022</h4>
+            <h4 class="certificate-heading">Some certificate #1</h4>
+          </div>
+          <div class="certificate-section df fd-r">
+            <h4 class="certificate-date">2020</h4>
+            <h4 class="certificate-heading">Some other certificate #2</h4>
+          </div>
+          <div class="certificate-section df fd-r">
+            <h4 class="certificate-date">2020</h4>
+            <h4 class="certificate-heading">Certificate #3</h4>
+          </div>
+          <div class="certificate-section df fd-r">
+            <h4 class="certificate-date">2018</h4>
+            <h4 class="certificate-heading">Older certificate #4</h4>
+          </div>
+          <div class="certificate-section df fd-r">
+            <h4 class="certificate-date">2018</h4>
+            <h4 class="certificate-heading">Certificate BBB #5</h4>
+          </div>
+
+        </div>
+
+
+        <div class="cube-face cube-face-top">
+          <p class="intro-heading"><span>Pro</span>jects</p>
+          <div class="projects">
+            <div class="project-border">
+              <div class="project-wrapper">
+                <div class="visit-wrapper">
+                  <p class="app-title">#1 App</p>
+                  <a class="visit-app" href="">Visit app <i class="fas fa-link"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="project-border">
+              <div class="project-wrapper">
+                <div class="visit-wrapper">
+                  <p class="app-title">#2 App</p>
+                  <a class="visit-app" href="">Visit app <i class="fas fa-link"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="project-border">
+              <div class="project-wrapper">
+                <div class="visit-wrapper">
+                  <p class="app-title">#3 App</p>
+                  <a class="visit-app" href="">Visit app <i class="fas fa-link"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="project-border">
+              <div class="project-wrapper">
+                <div class="visit-wrapper">
+                  <p class="app-title">#4 App</p>
+                  <a class="visit-app" href="">Visit app <i class="fas fa-link"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="project-border">
+              <div class="project-wrapper">
+                <div class="visit-wrapper">
+                  <p class="app-title">#5 App</p>
+                  <a class="visit-app" href="">Visit app <i class="fas fa-link"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="project-border">
+              <div class="project-wrapper">
+                <div class="visit-wrapper">
+                  <p class="app-title">#6 App</p>
+                  <a class="visit-app" href="">Visit app <i class="fas fa-link"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+        <div class="cube-face cube-face-bottom">
+          <p class="intro-heading">Con<span>tacts</span></p>
+          <h4 class="work-edu-heading"><i class="fas fa-location-arrow"></i> Sofia, Bulgaria</h4>
+          <h4 class="work-edu-heading"><i class="far fa-envelope"></i> some.persons.email@gmail.com</h4>
+          <h4 class="work-edu-heading"><i class="fas fa-phone"></i> +359 889 111 222</h4>
+          <div class="social-media-btns">
+            <i class="fab fa-facebook"></i>
+            <i class="fab fa-linkedin"></i>
+            <i class="fab fa-github"></i>
+            <i class="fab fa-codepen"></i>
+          </div>
+
         </div>
       </div>
-   
-    </div>
-  </div>
+    </section>
+  </main>
 
+  <script>
+    const cube = document.getElementById("cube");
 
+    const clickOnSide = (side) => {
+      const activeSide = cube.dataset.side;
+      cube.classList.replace(`show-${activeSide}`, `show-${side}`);
+      cube.setAttribute("data-side", side);
+    };
 
+    document.querySelectorAll(".btn").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        const sideToTurn = e.target.dataset.side;
+        clickOnSide(sideToTurn);
+      })
+    });
 
-  <div class="mx-auto max-w-screen-lg px-3 py-6">
-    <div class="border-t border-gray-600 pt-5">
-      <div class="text-sm text-gray-200">© Copyright
-        <!-- -->2022
-        <!-- --> by
-        <!-- -->Ehsan Bavaghar
-        <!-- --> <a class="text-cyan-400 hover:underline" href="https://api.whatsapp.com/send?phone=989191816172&text=%D8%B3%D9%84%D8%A7%D9%85%20%D9%85%D9%86%20%D8%A7%D8%B2%20%D8%B5%D9%81%D8%AD%D9%87%20%DA%AF%DB%8C%D8%AA%20%D9%87%D8%A7%D8%A8%20%D8%A8%D9%87%20%D8%B4%D9%85%D8%A7%20%D9%BE%DB%8C%D8%A7%D9%85%20%D9%85%DB%8C%20%D8%AF%D9%87%D9%85" target="_blank"
-          rel="noopener noreferrer">Whatsapp Message</a>.
-      </div>
-    </div>
-  </div>
-  <script>(function () { var js = "window['__CF$cv$params']={r:'73ffe310da352f9d',m:'b6MKO_vO1NhCTvcVWG5P6qh7eRBKyoDnEhxL6A9iR9E-1661383943-0-ARTEwt4xRQCld3GHQWjUfOoEEMmQzEO35PnK4bH+Qc7r7MO/E0K8wZ9FafzpUPsHQPEOcf0hCOsBmNfGS0PFBFc4VStwubiMFm3VG1ZDY12YYdSYWYIzM8yvA2ULMrULjkYlvAm/LYMVIY5sJxbqNnE=',s:[0xa4b443c8c8,0xf50959e5e0],u:'/cdn-cgi/challenge-platform/h/g'};var now=Date.now()/1000,offset=14400,ts=''+(Math.floor(now)-Math.floor(now%offset)),_cpo=document.createElement('script');_cpo.nonce='',_cpo.src='/cdn-cgi/challenge-platform/h/g/scripts/alpha/invisible.js?ts='+ts,document.getElementsByTagName('head')[0].appendChild(_cpo);"; var _0xh = document.createElement('iframe'); _0xh.height = 1; _0xh.width = 1; _0xh.style.position = 'absolute'; _0xh.style.top = 0; _0xh.style.left = 0; _0xh.style.border = 'none'; _0xh.style.visibility = 'hidden'; document.body.appendChild(_0xh); function handler() { var _0xi = _0xh.contentDocument || _0xh.contentWindow.document; if (_0xi) { var _0xj = _0xi.createElement('script'); _0xj.nonce = ''; _0xj.innerHTML = js; _0xi.getElementsByTagName('head')[0].appendChild(_0xj); } } if (document.readyState !== 'loading') { handler(); } else if (window.addEventListener) { document.addEventListener('DOMContentLoaded', handler); } else { var prev = document.onreadystatechange || function () { }; document.onreadystatechange = function (e) { prev(e); if (document.readyState !== 'loading') { document.onreadystatechange = prev; handler(); } }; } })();</script>
-  <iframe height="1" width="1" style="position: absolute; top: 0px; left: 0px; border: none; visibility: hidden;"
-    src="./Astro boilerplate_files/saved_resource.html"></iframe>
+  </script>
 </body>
 
 </html>
