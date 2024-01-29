@@ -1,2973 +1,662 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <style>
-    .flex,
-    .flex-children>*,
-    [class^="flex-"],
-    [class*=" flex-"] {
-      display: -webkit-box;
-      display: -ms-flexbox;
-      display: -webkit-flex;
-      display: flex;
-      flex-wrap: wrap;
-    }
-
-    .inline-flex,
-    .inline-flex-childen>*,
-    [class^="inline-flex-"] [class*=" inline-flex-"] {
-      display: inline-flex;
-    }
-
-    .flex-row {
-      flex-direction: row;
-    }
-
-    .flex-col {
-      flex-direction: column;
-    }
-
-    .flex-row-reverse,
-    .flex.row-reverse {
-      flex-direction: row-reverse;
-    }
-
-    .flex-col-reverse,
-    .flex.col-reverse {
-      flex-direction: column-reverse;
-    }
-
-    .flex-top {
-      margin-bottom: auto;
-    }
-
-    .flex-left {
-      margin-right: auto;
-    }
-
-    .flex-right {
-      margin-left: auto;
-    }
-
-    .flex-bottom {
-      margin-top: auto;
-    }
-
-    .flex-end {
-      justify-content: flex-end;
-    }
-
-    .flex-start {
-      justify-content: flex-start;
-    }
-
-    .flex-grow,
-    .flex-grow-children>* {
-      flex-grow: 1;
-      display: flex;
-    }
-
-    .flex-shrink,
-    .flex-shrink-children>* {
-      flex-shrink: 1;
-      display: flex;
-    }
-
-    .nowrap,
-    .flex-nowrap {
-      flex-wrap: nowrap;
-    }
-
-    .wrap,
-    .flex-wrap {
-      flex-wrap: wrap;
-    }
-
-    .wrap-reverse,
-    .flex-wrap-reverse {
-      flex-wrap: reverse;
-    }
-
-    .justify-center,
-    .justify-center-children>* {
-      justify-content: center;
-      display: flex;
-    }
-
-    .align-center,
-    .align-center-children>* {
-      align-items: center;
-      display: flex;
-    }
-
-    .space-between {
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .space-around {
-      display: flex;
-      justify-content: space-around;
-    }
-
-    .grid {
-      display: -ms-grid;
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-
-      &[columns],
-      &[data-columns] {
-        grid-template-columns: repeat(12, 1fr);
-      }
-
-      &.gap,
-      &[gap],
-      &[data-gap] {
-        grid-gap: 2em;
-      }
-
-      &.small-gap,
-      &[small-gap],
-      &[data-small-gap] {
-        grid-gap: 1em;
-      }
-
-      &.tiny-gap,
-      &[tiny-gap],
-      &[data-tiny-gap] {
-        grid-gap: .5em;
-      }
-
-      &.no-gap,
-      &[no-gap],
-      &[data-no-gap] {
-        grid-gap: 0;
-      }
-    }
-
-    @mixin grid-columns($max: 24) {
-      @for $i from 1 through $max {
-        $i: 25 - $i; // Reverse
-
-        $span: 12 / $i;
-
-        .grid {
-
-          &.columns-#{$i},
-          &[columns="#{$i}"],
-          &[data-columns="#{$i}"] {
-            grid-template-columns: repeat($i, 1fr);
-
-            &>* {
-              grid-column: auto / span 1;
-            }
-          }
-        }
-      }
-    }
-
-    @mixin grid-columns-override($max: 24) {
-      @for $i from 1 through $max {
-        .grid {
-          &>#{"*.span-" + $i} {
-            grid-column: auto / span $i;
-          }
-
-          &>#{"*.offset-" + $i} {
-            grid-column-start: $i + 1 !important;
-          }
-        }
-      }
-    }
-
-    @include grid-columns();
-    @include grid-columns-override();
-
-    .grid>.span-all {
-      grid-column-start: 1;
-      grid-column-end: -1;
-    }
-
-    .stack-exchange {
-      font-family: 'Lato', helvetica, sans-serif;
-      font-weight: 500;
-      font-size: .9em;
-      border: none;
-      margin-right: 1em;
-
-      .reputation {
-        margin-left: 10px;
-      }
-
-      svg {
-        transform: scale(.7) translate(6px, 10px);
-      }
-
-      .badges span {
-        margin-left: 10px;
-        font-size: .7em;
-
-        &:before {
-          content: "";
-          display: inline-block;
-          width: 10px;
-          height: 10px;
-          border-radius: 10px;
-          margin-right: 3px;
-        }
-
-        &.gold {
-          color: #cda400;
-
-          &:before {
-            background: #ffcc01;
-          }
-        }
-
-        &.silver {
-          color: #8c9298;
-
-          &.silver:before {
-            background: #b4b8bc;
-          }
-        }
-
-        &.bronze {
-          color: #c38b5f;
-
-          &.bronze:before {
-            background: #d1a684;
-          }
-        }
-
-      }
-    }
-
-    button,
-    .button {
-      border-radius: 4px;
-      font-weight: 500;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      //padding: 1em 2em;
-      padding: 1em 3em;
-      font-weight: 00;
-      letter-spacing: .02em;
-      text-decoration: none;
-      color: #fff;
-      background: rgba(0, 149, 238, .2);
-      //box-shadow: 0 0 0 2em rgba(rgba(0,149,238,.2), 0);
-      box-shadow: 0 10px 10px -13px #000 !important; // I like this style more?
-      border: 2px solid rgba(0, 149, 238, .2);
-      overflow: hidden;
-      flex-shrink: 0;
-
-      &,
-      &:focus {
-        outline: none;
-      }
-
-      &:hover {
-        background: lighten(rgba(0, 149, 238, .2), 5%);
-        box-shadow: 0 0 0 .325em rgba(rgba(0, 149, 238, .2), .2);
-      }
-
-      &:after {
-        content: "";
-        display: block;
-        position: absolute;
-        top: 50%;
-        right: 1em;
-        width: 1em;
-        height: 1em;
-        border-radius: 256px;
-        border: .25em solid rgba(255, 255, 255, .25);
-        border-top-color: #fff;
-        transform: translateY(-50%) scale(0) rotate(0);
-        transition: inherit;
-        pointer-events: none;
-        opacity: 1;
-      }
-
-      &.icon,
-      &.icon-right {
-        padding: 1em 0 1em 2em;
-        //padding: 1em 0 1em 1.5em;
-
-        svg {
-          position: relative;
-
-          border-top-right-radius: inherit;
-          border-bottom-right-radius: inherit;
-
-          //padding: 1em;
-          padding: calc(1em + 2px);
-          margin: calc(-1em - 2px) -2px calc(-1em - 2px) 1.5em;
-          width: 1.5em;
-          height: 1.5em;
-          background: rgba(0, 0, 0, .15);
-          transition: inherit;
-
-          & * {
-            transition: inherit;
-            transform-origin: center center;
-            transform: translateZ(0) scale(1);
-          }
-        }
-
-        &.unified {
-          svg {
-            background: transparent !important;
-            margin: calc(-1em - 2px) .5em calc(-1em - 2px) -.25em;
-          }
-        }
-
-        &.icon-left {
-          flex-direction: row-reverse;
-          //padding: 1em 1.5em 1em 0;
-          padding: 1em 2em 1em 0;
-
-          &:after {
-            right: 0;
-            left: 1em;
-          }
-
-          svg {
-            border-top-right-radius: 0;
-            border-bottom-right-radius: 0;
-            border-top-left-radius: inherit;
-            border-bottom-left-radius: inherit;
-
-            margin: calc(-1em - 2px) 1.5em calc(-1em - 2px) -2px;
-          }
-
-          &.unified {
-            svg {
-              background: transparent;
-              margin: calc(-1em - 2px) -.25em calc(-1em - 2px) .5em;
-            }
-          }
-        }
-      }
-
-      &.primary {
-        color: #fff !important;
-      }
-
-      &.loading {
-        //box-shadow: 0 0 0 .175em rgba(rgba(0,149,238,.2), .35);
-        box-shadow: none !important;
-        pointer-events: none;
-        filter: grayscale(.3) brightness(1.2);
-
-        &:after {
-          transform: translateY(-50%) scale(1) rotate(0);
-          animation: .5s rotate-vertical-center linear forwards infinite;
-          opacity: 1;
-        }
-
-        &:not([class*="icon"]) {
-          padding-right: 3.75em;
-        }
-
-        svg {
-          background: rgba(0, 0, 0, .05);
-
-          & * {
-            transform: translateZ(0) scale(0);
-          }
-        }
-
-      }
-
-      &.small,
-      &.tiny {
-        padding: .5em 2em;
-
-        &:after {
-          width: .75em;
-          height: .75em;
-          right: .75em;
-          border-width: .125em
-        }
-
-        &.icon,
-        &.icon-right {
-          padding: .5em 0 .5em 1.25em;
-
-          svg {
-            //padding: .3125em 1em;
-            padding: calc(0.7em + 2px) .75em;
-            margin: -1em -2px -1em 1.25em;
-            height: 1.15em;
-            width: 1.15em;
-          }
-
-          &.unified {
-            svg {
-              padding-right: 1.25em;
-              margin-left: -.125em;
-            }
-          }
-        }
-
-        &.icon-left {
-          padding: .5em 1.25em .5em 0;
-
-          svg {
-            margin: -1em 1.25em -1em -2px;
-          }
-
-          &.unified {
-            svg {
-              padding-left: 1.25em;
-              margin-right: -.125em;
-            }
-          }
-
-          &:after {
-            right: 0;
-            left: .75em;
-          }
-        }
-
-        &.loading {
-          &:not([class*="icon"]) {
-            padding-right: 2.75em;
-          }
-        }
-      }
-
-      &.tiny {
-        font-size: 10px;
-      }
-
-      &.outline,
-      &.secondary,
-      &.tertiary,
-      &.quaternary {
-        box-shadow: 0 10px 10px -15px #000 !important; // I like this style more?
-
-        &.loading {
-          box-shadow: none !important;
-        }
-      }
-
-      &.blank {
-        box-shadow: none !important;
-        background: transparent;
-        border-color: transparent;
-        color: rgba(0, 149, 238, .2);
-
-        &:hover {
-          background: rgba(rgba(0, 149, 238, .2), .15);
-        }
-
-        &.loading {
-          &:after {
-            border-top-color: rgba(0, 149, 238, .2);
-          }
-
-          background: rgba(rgba(0, 149, 238, .2), .3);
-        }
-      }
-
-      &:hover {
-        box-shadow: none !important;
-      }
-
-      &.special {
-        background: linear-gradient(-135deg, #0095EE 30%, #00D0DF 100%) !important;
-        padding: calc(1em + 2px) calc(3em + 2px);
-        border: none;
-        color: #fff !important;
-
-        &.icon,
-        &.icon-right {
-          padding: calc(1em + 2px) 0 calc(1em + 2px) calc(2em + 2px);
-
-          &.icon-left {
-            padding: calc(1em + 2px) calc(2em + 2px) calc(1em + 2px) 0;
-          }
-
-          svg {
-            color: #fff !important;
-            background: rgba(255, 255, 255, .15);
-          }
-        }
-
-        &:hover {
-          filter: brightness(110%);
-        }
-      }
-    }
-
-    * {
-      box-sizing: border-box;
-      position: relative;
-    }
-
-    a {
-      text-decoration: none;
-      color: #0095ee;
-      font-weight: 600;
-    }
-
-    ::-webkit-scrollbar-track {
-      -webkit-box-shadow: none;
-      background-color: transparent;
-    }
-
-    ::-webkit-scrollbar {
-      width: 16px;
-      background-color: transparent;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background-color: rgba(255, 255, 255, .2);
-      -webkit-border-radius: 8px;
-      border-radius: 8px;
-      border: 6px solid #191b21;
-    }
-
-    body {
-      background: #2e2f39;
-      background: linear-gradient(to bottom right, #2e2f39, #191b21);
-      background-attachment: fixed;
-      color: #fff;
-      color: #cbcdd6;
-      width: 100%;
-      min-height: 100vh;
-      font-family: 'Lato', arial, sans-serif;
-      line-height: 1.625;
-      font-size: 62.5%;
-
-      &:after {
-        content: "Template by @Xhynk";
-        position: fixed;
-        bottom: 3px;
-        right: 6px;
-        opacity: .25;
-        font-size: 11px;
-        letter-spacing: .25px;
-        pointer-events: none;
-      }
-    }
-
-    body,
-    #container {
-      perspective: 1100px;
-    }
-
-    #profile,
-    #section-container {
-      perspective: 1px;
-    }
-
-    .no-look {
-
-      #container,
-      #profile,
-      #section-container,
-      .applause-container {
-        transition: .5s all ease-out;
-      }
-    }
-
-    main {
-      width: 85%;
-      width: calc(100% - 80px);
-      max-width: 1366px;
-      font-size: 1.8em;
-    }
-
-    nav {
-      font-size: 1.6em;
-
-      a {
-        color: #fff;
-        text-decoration: none;
-        text-transform: uppercase;
-        padding: 2em;
-
-        &:after {
-          content: "";
-          width: 100%;
-          height: 4px;
-          background: rgba(0, 149, 238, .2);
-          position: absolute;
-          bottom: 14px;
-          left: 0;
-          transition: 0.15s all cubic-bezier(0.49, -0.17, 0.71, 1.3);
-          transform: scaleX(0);
-        }
-
-        &.active {
-          color: #0095ee;
-
-          &:after {
-            transform: scaleX(1);
-          }
-        }
-      }
-    }
-
-    img {
-      max-width: 100%;
-    }
-
-    mark {
-      display: inline-block;
-      padding: 0 .5em;
-      background: rgba(0, 149, 238, .2);
-      border-radius: 3px;
-      color: #cbcdd6;
-    }
-
-    a:hover {
-      transition: 0.15s all cubic-bezier(0.49, -0.17, 0.71, 1.3);
-    }
-
-    .font-0 {
-      font-size: 0;
-    }
-
-    #container {
-      height: calc(100vh - 80px - 90px); // 90px for nav
-      max-height: 640px;
-    }
-
-    .review {
-      h4 {
-        margin-bottom: 6px;
-      }
-
-      p {
-        margin-top: 0;
-      }
-    }
-
-    .star {
-      display: inline;
-
-      svg {
-        stroke-width: 1;
-      }
-
-      &.earned svg {
-        color: #feb800;
-        fill: #feb800
-      }
-
-      &.missed svg {
-        color: rgba(0, 0, 0, .2);
-        fill: rgba(0, 0, 0, .2);
-      }
-    }
-
-    #profile {
-      z-index: 2;
-      width: 480px;
-      flex-basis: 480px;
-      flex-shrink: 0;
-      //box-shadow: -18px -18px 0 rgba(0,149,238,.2), 10px 0 40px -20px #000;
-      transform: translate3d(0px, 0px, 24px);
-      box-shadow: 10px 0 40px -20px #000;
-      overflow-y: auto;
-      overflow-x: hidden;
-
-      #profile-photo {
-        font-size: 0;
-        background-size: cover;
-        background-position: center top;
-        border-radius: 8px;
-        min-height: 220px;
-      }
-
-      .handle {
-        display: block;
-        margin-top: -1.5em;
-        opacity: .5;
-        font-weight: 600;
-      }
-
-      #profile-actions {
-        width: 100%;
-        overflow: hidden;
-        border-bottom-left-radius: 8px;
-        border-bottom-right-radius: 8px;
-
-        &>* {
-          &:after {
-            content: "";
-            position: absolute;
-            top: 1px;
-            right: 0;
-            width: 1px;
-            height: calc(100% - 1px);
-            background: linear-gradient(to bottom, rgba(255, 255, 255, .1) 0%, rgba(255, 255, 255, 0) 85%);
-          }
-
-          &:last-child:after {
-            display: none;
-          }
-        }
-
-        &:before {
-          content: "";
-          position: absolute;
-          top: 0;
-          width: 100%;
-          height: 1px;
-          background: radial-gradient(ellipse at top, rgba(255, 255, 255, .1) 0%, rgba(255, 255, 255, 0) 85%);
-        }
-
-        a {
-          padding: 12px 0;
-          color: #fff;
-          text-decoration: none;
-
-          &:hover {
-            background: rgba(0, 149, 238, .2);
-          }
-        }
-      }
-
-      #social-media {
-        margin: 12px 0 24px;
-
-        a {
-          color: rgba(255, 255, 255, .3);
-          margin: 0 4px;
-
-          &:hover {
-            color: #0095ee;
-            transition: 0s all linear;
-
-            svg {
-              transform: scale(1.35);
-            }
-          }
-        }
-
-        svg {
-          transition: 0.15s all cubic-bezier(0.49, -0.17, 0.71, 1.3);
-          width: 21px;
-          height: 21px;
-        }
-      }
-
-      #profile-content {
-        /*&:before {
-			content: "";
-			position: absolute;
-			top: -24px;
-			left: 0;
-			border: 24px solid #191b21;
-			border-color: transparent transparent transparent #191b21;
-			border-style: solid;
-			transform: scaleX(10);
-			transform-origin: top left;
-		}
-
-		&:after {
-			content: "";
-			position: absolute;
-			top: -24px;
-			right: 0;
-			border: 24px solid #191b21;
-			border-color: transparent #191b21 transparent transparent;
-			border-style: solid;
-			transform: scaleX(10);
-			transform-origin: top right;
-		}
-		*/
-      }
-
-      #wave {
-        width: 100%;
-        height: 100px;
-        position: absolute;
-        left: 0;
-        bottom: -2px; // overlap to prevent gaps
-      }
-
-      &>* {
-        flex-basis: 50%;
-      }
-    }
-
-    #section-container {
-      transform: translate3d(0px, 0px, -12px);
-
-      section {
-        height: 100%;
-        width: 100%;
-        top: 15px;
-        background: #191b21;
-        border-radius: 8px;
-        max-height: calc(100% - 30px);
-        overflow-y: auto;
-        box-shadow: -100px 0 0 #191b21;
-        position: absolute;
-        z-index: 1;
-        transition: .35s all cubic-bezier(0.49, -0.17, 0.71, 1.3);
-
-        header {
-          margin-top: -24px;
-
-          &:after {
-            content: "";
-            width: 100%;
-            height: 1px;
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            background: linear-gradient(to right, rgba(255, 255, 255, .1) 70%, rgba(255, 255, 255, 0));
-          }
-
-          h2 {
-            margin: 0;
-          }
-        }
-
-        &>* {
-          padding: 30px;
-
-          &:last-child {
-            padding-bottom: 24px;
-          }
-        }
-
-        .service {
-          .icon {
-            margin: 0 auto;
-            font-size: 0;
-            width: 24px;
-            padding: 14px;
-            box-sizing: content-box;
-            background: rgba(0, 149, 238, .2);
-            border-radius: 40px;
-          }
-
-          &>* {
-            &:last-child {
-              margin-bottom: 0;
-            }
-          }
-        }
-
-        &.invisible {
-          z-index: -1;
-          transform: translateX(-15%);
-          opacity: 0;
-          pointer-events: none;
-        }
-
-        &:before,
-        &:after {
-          content: "";
-          background: #191b21;
-          width: 100%;
-          grid-column-start: 1;
-          grid-column-end: -1;
-          height: 24px;
-          position: sticky;
-          top: 0;
-          left: 0;
-          z-index: 1;
-        }
-
-        &:after {
-          top: auto;
-          bottom: 0;
-          border-top-right-radius: 0;
-        }
-
-        article {
-          background: rgba(255, 255, 255, .1);
-          padding: 0;
-          margin: 20px;
-          border-radius: 6px;
-          max-height: none;
-
-          img {
-            border-top-right-radius: 8px;
-            border-top-left-radius: 8px;
-            overflow: hidden;
-          }
-
-          .card-content {
-            padding: 0 20px 20px;
-
-            h3 {
-              text-transform: uppercase;
-            }
-          }
-        }
-      }
-    }
-
-    .padding-0 {
-      padding: 0 !important;
-    }
-
-    .margin-0 {
-      margin: 0 !important;
-    }
-
-    #crypto {
-      display: inline-grid;
-
-      &>div {
-        margin-bottom: 6px;
-        max-width: 100%;
-        overflow: hidden;
-
-        span {
-          word-wrap: break-all;
-        }
-      }
-    }
-
-    #about-stats {
-      &>* {
-        &:after {
-          content: "";
-          width: 100%;
-          height: 1px;
-          position: absolute;
-          bottom: -.5em;
-          left: 0;
-          background: radial-gradient(ellipse at top, rgba(255, 255, 255, .1) 0%, rgba(255, 255, 255, 0) 85%);
-        }
-
-        &:last-child:after {
-          display: none;
-        }
-      }
-    }
-
-    .card {
-      background: #191b21;
-      border-radius: 8px;
-    }
-
-    .text-center {
-      text-align: center;
-    }
-
-    body.light-mode {
-      .card {
-        background-color: #fff;
-      }
-    }
-
-    @media all and (max-width: 1200px) {
-      section.grid {
-        grid-template-columns: repeat(1, 1fr) !important;
-      }
-    }
-
-    @media all and (max-width: 920px) {
-      #profile {
-        width: 360px;
-        flex-basis: 360px;
-      }
-    }
-
-    @media all and (max-width: 768px) {
-      nav {
-        width: 100% !important;
-        justify-content: space-around !important;
-        flex-wrap: nowrap;
-
-        a {
-          padding: .75em;
-        }
-      }
-
-      #container,
-      #profile,
-      #section-container,
-      .applause-container {
-        transform: none !important;
-      }
-
-      .applause-container {
-        .applause {
-          width: 48px !important;
-          height: 48px !important;
-        }
-
-        svg {
-          width: 28px !important;
-          height: 28px !important;
-        }
-      }
-
-      #container {
-        flex-direction: column;
-        max-width: 100%;
-      }
-
-      #profile {
-        width: 100%;
-        flex-basis: 100%;
-      }
-
-      #section-container {
-
-        &:before,
-        &:after {
-          display: none;
-        }
-
-        section {
-          box-shadow: none;
-          position: relative;
-
-          &,
-          &.invisible {
-            transform: none;
-            pointer-events: all;
-            opacity: 1;
-          }
-        }
-      }
-
-      main,
-      #container {
-        height: auto;
-        max-height: none;
-      }
-    }
-
-    @media all and (max-width: 520px) {
-      main {
-        width: calc(100% - 40px);
-        padding: 20px 0;
-      }
-
-      #container {
-        height: auto;
-        max-height: none;
-      }
-
-      #stack-exchange {
-        font-size: 16px !important;
-
-        svg {
-          width: 21px !important;
-          height: 21px !important;
-        }
-      }
-
-      // Non-card on mobile?
-      main {
-        width: 100%;
-        padding: 0;
-      }
-
-      #profile,
-      #profile-photo {
-        border-radius: 0 !important;
-        box-shadow: none;
-      }
-
-      #profile {
-        &:after {
-          content: "";
-          position: absolute;
-          bottom: 0;
-          width: 100%;
-          height: 1px;
-          background: radial-gradient(ellipse at top, rgba(255, 255, 255, .1) 0%, rgba(255, 255, 255, 0) 85%);
-        }
-      }
-
-      #section-container {
-        section {
-          top: 0;
-          border-radius: 0;
-        }
-      }
-    }
-
-    nav {}
-
-    #stack-exchange {
-      font-size: 21px;
-      position: sticky;
-      bottom: 0;
-      background: linear-gradient(to bottom, rgba(20, 25, 32, 0), rgba(21, 25, 32, 1) 80%);
-      transition: .25s all ease-out;
-      left: 0;
-      width: 100%;
-      padding: 0 0 10px;
-
-      &:hover {
-        background: linear-gradient(to bottom, rgba(20, 25, 32, .5), rgba(21, 25, 32, 1) 80%);
-      }
-
-      a {
-        text-decoration: none;
-        color: #fff;
-        margin: 0 12px !important;
-      }
-
-      svg {
-        fill: #fff !important;
-        width: 32px;
-        height: 32px;
-        transform: none !important;
-      }
-    }
-
-    .applause-container {
-      z-index: 12;
-      position: absolute;
-      top: -48px;
-      width: 100%;
-      left: 0;
-    }
-
-    .applause {
-      overflow: visible;
-
-      .total-claps {
-        position: absolute;
-        left: 50%;
-        bottom: -32px;
-        color: #789;
-        font-weight: 600;
-        transform: translateX(-50%);
-        pointer-events: none;
-        font-size: 18px;
-      }
-
-      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-      -webkit-tap-highlight-color: transparent;
-      -webkit-user-select: none;
-      -khtml-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-
-      cursor: pointer;
-      position: relative;
-      display: flex;
-      align-items: center;
-      user-select: none;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index:10;
-      border-radius: 256px;
-      width: 64px;
-      height: 64px;
-      background: #44d9ff;
-      //transition: all 0.2s cubic-bezier(0.17, 0.89, 0.58, 1.61);
-
-      &:after {
-        content: "";
-        display: block;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(1);
-        border-radius: 256px;
-        width: calc(100% - 10px);
-        height: calc(100% - 10px);
-        background: #0095ee;
-        //transition: all 0.2s cubic-bezier(0.17, 0.89, 0.58, 1.61);
-      }
-
-      &:before {
-        content: "";
-        display: block;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image: linear-gradient(90deg, #ddd 50%, transparent 50%, transparent), linear-gradient(90deg, #63B8FF 50%, #ddd 50%, #ddd);
-        border-radius: 256px;
-        transition: .2s all;
-      }
-
-      &[data-claps="1"]:before {
-        background-image: linear-gradient(90deg, #ddd 50%, transparent 50%, transparent), linear-gradient(126deg, #63B8FF 50%, #ddd 50%, #ddd);
-      }
-
-      &[data-claps="2"]:before {
-        background-image: linear-gradient(90deg, #ddd 50%, transparent 50%, transparent), linear-gradient(162deg, #63B8FF 50%, #ddd 50%, #ddd);
-      }
-
-      &[data-claps="3"]:before {
-        background-image: linear-gradient(90deg, #ddd 50%, transparent 50%, transparent), linear-gradient(198deg, #63B8FF 50%, #ddd 50%, #ddd);
-      }
-
-      &[data-claps="4"]:before {
-        background-image: linear-gradient(90deg, #ddd 50%, transparent 50%, transparent), linear-gradient(234deg, #63B8FF 50%, #ddd 50%, #ddd);
-      }
-
-      &[data-claps="5"]:before {
-        background-image: linear-gradient(90deg, #ddd 50%, transparent 50%, transparent), linear-gradient(270deg, #63B8FF 50%, #ddd 50%, #ddd);
-      }
-
-      &[data-claps="6"]:before {
-        background-image: linear-gradient(-90deg, #63B8FF 50%, transparent 50%, transparent), linear-gradient(306deg, #63B8FF 50%, #ddd 50%, #ddd)
-      }
-
-      &[data-claps="7"]:before {
-        background-image: linear-gradient(-90deg, #63B8FF 50%, transparent 50%, transparent), linear-gradient(342deg, #63B8FF 50%, #ddd 50%, #ddd)
-      }
-
-      &[data-claps="8"]:before {
-        background-image: linear-gradient(-90deg, #63B8FF 50%, transparent 50%, transparent), linear-gradient(378deg, #63B8FF 50%, #ddd 50%, #ddd)
-      }
-
-      &[data-claps="9"]:before {
-        background-image: linear-gradient(-90deg, #63B8FF 50%, transparent 50%, transparent), linear-gradient(414deg, #63B8FF 50%, #ddd 50%, #ddd)
-      }
-
-      &[data-claps="10"] {
-        .total-claps {
-          color: #0095ee;
-        }
-
-        svg {
-          fill: #fff;
-          stroke: #0095ee;
-        }
-
-        &:before {
-          background-image: none;
-          background: #63B8FF;
-        }
-      }
-
-      svg {
-        box-sizing: content-box;
-        padding: 8px;
-        border-radius: 256px;
-        position: absolute;
-        z-index: 100;
-        width: 32px;
-        height: 32px;
-        margin-right: 4px;
-        box-shadow: 0px 18px 24px -15px rgba(104, 98, 255, 0.85), 0px 15px 20px -25px rgba(104, 98, 255, 0.85);
-
-        path:first-child {
-          transform-origin: bottom left;
-        }
-
-        path:nth-child(2) {
-          transform-origin: top left;
-        }
-
-        //fill: white;
-        //stroke: #0095ee;
-      }
-
-      &:hover {
-        &:after {
-          background: #0073cc;
-        }
-
-        svg {
-          fill: white;
-          stroke: #0073cc;
-
-          path {
-            transition: .1s transform;
-          }
-        }
-      }
-
-      &:active {
-        &:after {
-          transform: translate(-50%, -50%) scale(1);
-        }
-
-        svg {
-          path:first-child {
-            //transform: scale(1) rotate(15deg) translate(3px, 0);
-            transform: scale(1) rotate(28deg) translate(-3px, -7px)
-          }
-
-          path:nth-child(2) {
-            transform: scale(.975) rotate(-12deg);
-          }
-        }
-      }
-
-      font-size: 12px;
-
-      .particle {
-        pointer-events: none;
-        border-radius: 10px;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 1;
-        z-index: -1;
-        display: block;
-      }
-    }
-
-    form,
-    .form {
-      &:not(.group-filter) {
-        display: grid;
-        grid-gap: .5em;
-
-        &.flex {
-          display: flex;
-        }
-
-        label {
-          position: relative;
-          display: block;
-
-          span {
-            position: absolute;
-            top: 1.325em;
-            left: 1em;
-            transform: translateY(-50%);
-            font-weight: 600;
-            transition: .15s all;
-            pointer-events: none;
-            text-transform: capitalize;
-            color: #797c88;
-          }
-
-          em {
-            font-size: .8em;
-          }
-
-          &.toggle {
-            display: flex;
-            align-items: center;
-            //justify-content: center;
-
-            input[type="checkbox"] {
-
-              &:hover,
-              &:focus {
-                &~span {
-                  color: #0095ee;
-
-                  &:before {
-                    background: rgba(#0095ee, .15);
-                  }
-                }
-              }
-
-              &~span {
-                top: 0;
-                left: 0;
-                pointer-events: all;
-                position: relative;
-                display: flex;
-                align-items: center;
-                justify-content: left;
-                font-size: inherit;
-                position: relative;
-
-                &:before {
-                  margin-right: .5em;
-                  width: 2.25em;
-                  height: 1em;
-                  border-radius: 256px;
-                  border: 2px solid #797c88;
-                  background: transparent;
-                }
-
-                &:after {
-                  content: "";
-                  position: absolute;
-                  top: 50%;
-                  width: calc(1em - 4px);
-                  height: calc(1em - 4px);
-                  border-radius: 256px;
-                  background: #797c88;
-                  transition: .15s all cubic-bezier(0.49, -0.17, 0.71, 1.3);
-                  transform: translate(4px, -50%);
-                }
-              }
-
-              &:checked {
-                &~span {
-                  &:before {
-                    background: #0095ee;
-                    border-color: darken(#0095ee, 7.5%);
-                  }
-
-                  &:after {
-                    transform: translate(calc(1.5em + 1px), -50%);
-                    background: #fff;
-                  }
-                }
-              }
-            }
-          }
-        }
-
-        input,
-        select,
-        textarea {
-          display: block;
-          width: 100%;
-          border: none;
-          border: 1px solid #c3c6c9;
-          border-radius: 6px;
-          padding: .75em 1em;
-          font-weight: 600;
-          box-sizing: border-box;
-          background: rgba(255, 255, 255, .1);
-
-
-          &:focus {
-            outline: none;
-            box-shadow: none;
-            border-color: #0095ee;
-            color: #0095ee;
-          }
-
-          &:focus~span,
-          &.fauxcus~span,
-          &:not(:placeholder-shown)~span {
-            top: -1.75em;
-            font-size: 10px;
-            transform: translateY(0);
-          }
-
-          &:required {
-            &~span {
-              &:after {
-                content: " *";
-                color: #ff7471
-              }
-            }
-          }
-        }
-
-
-        input[type="checkbox"] {
-          width: 1px;
-          height: 1px;
-          opacity: 0;
-          position: absolute;
-
-          &~span {
-            white-space: nowrap;
-
-            &:before {
-              content: "";
-              display: block;
-              width: 1.5em;
-              height: 1.5em;
-              background: #000;
-              border-radius: 3px;
-            }
-          }
-        }
-
-        select {
-          padding: calc(.75em - 2px) calc(1em - 2px);
-
-          &>* {
-            &:first-child {
-              color: #797c88;
-            }
-          }
-        }
-      }
-    }
-
-    svg.pluralsight {
-      width: 24px;
-      height: 24px;
-      margin: 0 3px 0 -3px;
-    }
-
-    #contact-methods {
-      padding-bottom: 0;
-      margin-bottom: 0;
-
-      li {
-        padding: 0;
-        margin: 0 0 12px;
-        display: flex;
-        align-items: center;
-
-        svg {
-          margin-right: 6px;
-          width: 18px;
-          height: 18px;
-        }
-      }
-    }
-
-    .full {
-      width: 100%;
-    }
-
-    .eyes {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      overflow: hidden;
-    }
-
-    .button {
-      user-select: none;
-    }
-  </style>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>iPortfolio Bootstrap Template - Index</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="assets/css/style.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: iPortfolio
+  * Updated: Jan 09 2024 with Bootstrap v5.3.2
+  * Template URL: https://bootstrapmade.com/iportfolio-bootstrap-portfolio-websites-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
 </head>
 
-<body class="flex-col align-center dark-mode">
-  <nav class="flex justify-center">
-    <a href="#about" class="active">About</a>
-    <!--<a href="#resume">Resume</a>-->
-    <!--<a href="#doggies">Doggies</a>-->
-    <a href="#projects">Projects</a>
-    <!--<a href="#blog">Blog</a>-->
-    <a href="#labs">Labs</a>
-    <a href="#reviews">Reviews</a>
-    <a href="#contact">Contact</a>
-    <a href="#donate">Donate</a>
-  </nav>
-  <main class="flex-grow align-center justify-center">
-    <div id="container" class="flex-grow nowrap">
-      <div id="profile" class="flex-col card text-center nowrap">
-        <div id="profile-photo" style="background-image: url(https://xhynk.com/public/img/alex-portfolio.png);">
-          <canvas id="wave"></canvas>
-        </div>
-        <div id="profile-content" class="text-center flex-col space-around">
-          <div class="applause-container flex justify-center align-center">
-            <div class="applause" data-claps="0" onmousedown="applaud(this,event);" onContextMenu="return false;">
-              <svg version="1.1" class="clap" xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 65.3 58"
-                style="enable-background:new 0 0 65.3 58;" stroke-width="3" fill="none" stroke="currentColor"
-                stroke-linejoin="round" stroke-linecap="round" xml:space="preserve">
-                <path class="st0" d="M11.7,45.2L2,33.7c0,0,3.6-3.4,4.3-6.3c0.7-2.9,2.9-17,2.9-17c0.3-2.2,2.4-3.8,4.6-3.5c2.2,0.3,3.7,2.4,3.4,4.6
-								c0,0-0.6,5.4-0.6,5.2L32.9,3c1.7-1.5,4.3-1.3,5.7,0.5c1.4,1.7,1.2,4.3-0.6,5.8l-5.2,4.4l8.3-7C43,5.1,45.5,5.3,47,7
-								c1.4,1.7,1.2,4.3-0.5,5.7L33.8,23.7l9.6-8.3c1.7-1.5,4.2-1.3,5.7,0.5c1.4,1.7,1.2,4.3-0.5,5.7L46,23.7" />
-                <path class="st0" d="M33.8,23.7c0.6-0.5,3.9-3.4,3.9-3.4c1.7-1.5,1.7-4.2,0.3-5.9c-1.3-1.5-3.4-1.7-5-0.8
-								C30.1,15.9,20.1,24.4,19,25.2c-2.4,1.7-7.4,2-7.4,2V51c0,0,2.7-0.5,5.7,1.1c2.9,1.5,9.6,3.5,14.7,3.9h17.8c2.3,0,4.1-1.8,4.1-4
-								c0-2.2-1.8-4-4.1-4h-11h16.2c2.3,0,4.1-1.8,4.1-4s-1.8-4-4.1-4H38.9h16.2h4c2.3,0,4.1-1.8,4.1-4c0-2.2-1.8-4-4.1-4h-4.1H38.9h16.2
-								c2.3,0,4.2-1.8,4.2-4c0-2.2-1.8-4-4.1-4H46H33.8z" />
-              </svg>
-              <span class="total-claps">1832</span>
-            </div>
-          </div>
-          <div class="flex-grow flex-col space-around">
-            <div>
-              <h1>Alexander Demchak</h1>
-              <span class="handle">@Xhynk</span>
-              <span class="title">Lead Software Developer</span>
-            </div>
-            <div id="social-media" class="font-0">
-              <a target="_blank" href="https://github.com/xhynk"><svg xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 496 512">
-                  <path fill="currentColor"
-                    d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"
-                    class=""></path>
-                </svg></a>
-              <a target="_blank" href="https://www.facebook.com/alexdemchak"><svg xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 512 512">
-                  <path fill="currentColor"
-                    d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z"
-                    class=""></path>
-                </svg></a>
-              <a target="_blank" href="https://twitter.com/xhynk"><svg xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 512 512">
-                  <path fill="currentColor"
-                    d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"
-                    class=""></path>
-                </svg></a>
-              <a target="_blank" href="https://www.instagram.com/xhynk/"><svg xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 448 512">
-                  <path fill="currentColor"
-                    d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
-                    class=""></path>
-                </svg></a>
-              <a target="_blank" href="https://stackoverflow.com/users/933810/xhynk"><svg
-                  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
-                  <path fill="currentColor"
-                    d="M290.7 311L95 269.7 86.8 309l195.7 41zm51-87L188.2 95.7l-25.5 30.8 153.5 128.3zm-31.2 39.7L129.2 179l-16.7 36.5L293.7 300zM262 32l-32 24 119.3 160.3 32-24zm20.5 328h-200v39.7h200zm39.7 80H42.7V320h-40v160h359.5V320h-40z"
-                    class=""></path>
-                </svg></a>
-              <a target="_blank" href="https://profiles.wordpress.org/alexdemchak/"><svg
-                  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                  <path fill="currentColor"
-                    d="M256 8C119.3 8 8 119.2 8 256c0 136.7 111.3 248 248 248s248-111.3 248-248C504 119.2 392.7 8 256 8zM33 256c0-32.3 6.9-63 19.3-90.7l106.4 291.4C84.3 420.5 33 344.2 33 256zm223 223c-21.9 0-43-3.2-63-9.1l66.9-194.4 68.5 187.8c.5 1.1 1 2.1 1.6 3.1-23.1 8.1-48 12.6-74 12.6zm30.7-327.5c13.4-.7 25.5-2.1 25.5-2.1 12-1.4 10.6-19.1-1.4-18.4 0 0-36.1 2.8-59.4 2.8-21.9 0-58.7-2.8-58.7-2.8-12-.7-13.4 17.7-1.4 18.4 0 0 11.4 1.4 23.4 2.1l34.7 95.2L200.6 393l-81.2-241.5c13.4-.7 25.5-2.1 25.5-2.1 12-1.4 10.6-19.1-1.4-18.4 0 0-36.1 2.8-59.4 2.8-4.2 0-9.1-.1-14.4-.3C109.6 73 178.1 33 256 33c58 0 110.9 22.2 150.6 58.5-1-.1-1.9-.2-2.9-.2-21.9 0-37.4 19.1-37.4 39.6 0 18.4 10.6 33.9 21.9 52.3 8.5 14.8 18.4 33.9 18.4 61.5 0 19.1-7.3 41.2-17 72.1l-22.2 74.3-80.7-239.6zm81.4 297.2l68.1-196.9c12.7-31.8 17-57.2 17-79.9 0-8.2-.5-15.8-1.5-22.9 17.4 31.8 27.3 68.2 27.3 107 0 82.3-44.6 154.1-110.9 192.7z"
-                    class=""></path>
-                </svg></a>
-              <a target="_blank" href="https://linktr.ee/xhynk"><svg xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 640 512">
-                  <path fill="currentColor"
-                    d="M634.19 376.23l-55.47-64.37H584c9.34 0 17.84-5.43 21.78-13.92 3.94-8.47 2.56-18.48-3.47-25.61l-54.56-64.55H560c9.47 0 18.06-5.58 21.94-14.24a24.088 24.088 0 0 0-4.09-25.85l-144-160.11c-9.13-10.1-26.56-10.1-35.69 0L320 94.48l-78.16-86.9c-9.13-10.1-26.56-10.1-35.69 0l-144 160.11a24.063 24.063 0 0 0-4.09 25.85c3.88 8.66 12.47 14.24 21.94 14.24h12.25l-54.56 64.55c-6.03 7.13-7.41 17.14-3.47 25.61A24.021 24.021 0 0 0 56 311.86h5.28L5.81 376.23c-6.13 7.11-7.53 17.15-3.63 25.69a23.998 23.998 0 0 0 21.81 14.01h168v24.46l-30.29 48.43c-5.32 10.65 2.42 23.17 14.31 23.17h95.96c11.89 0 19.63-12.53 14.31-23.17L256 440.39v-24.46h128v24.46l-30.29 48.43c-5.32 10.65 2.42 23.17 14.31 23.17h95.96c11.89 0 19.63-12.53 14.31-23.17L448 440.39v-24.46h168c9.38 0 17.91-5.47 21.81-14.01 3.91-8.54 2.51-18.57-3.62-25.69zM304 367.9H76.37l89.66-104.07h-58.28l88-104.07h-61.88L224 59.55l90.13 100.2h-61.88l88 104.07h-58.28l89.66 104.07H304zm131 0l-48.29-56.04H392c9.34 0 17.84-5.43 21.78-13.92 3.94-8.47 2.56-18.48-3.47-25.61l-54.56-64.55H368c9.47 0 18.06-5.58 21.94-14.24a24.088 24.088 0 0 0-4.09-25.85l-33.55-37.31L416 59.55l90.13 100.2h-61.88l88 104.07h-58.28l89.66 104.07H435z"
-                    class=""></path>
-                </svg></a>
-              <a target="_blank" href="https://steamcommunity.com/id/xhynk/"><svg xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 496 512">
-                  <path fill="currentColor"
-                    d="M496 256c0 137-111.2 248-248.4 248-113.8 0-209.6-76.3-239-180.4l95.2 39.3c6.4 32.1 34.9 56.4 68.9 56.4 39.2 0 71.9-32.4 70.2-73.5l84.5-60.2c52.1 1.3 95.8-40.9 95.8-93.5 0-51.6-42-93.5-93.7-93.5s-93.7 42-93.7 93.5v1.2L176.6 279c-15.5-.9-30.7 3.4-43.5 12.1L0 236.1C10.2 108.4 117.1 8 247.6 8 384.8 8 496 119 496 256zM155.7 384.3l-30.5-12.6a52.79 52.79 0 0 0 27.2 25.8c26.9 11.2 57.8-1.6 69-28.4 5.4-13 5.5-27.3.1-40.3-5.4-13-15.5-23.2-28.5-28.6-12.9-5.4-26.7-5.2-38.9-.6l31.5 13c19.8 8.2 29.2 30.9 20.9 50.7-8.3 19.9-31 29.2-50.8 21zm173.8-129.9c-34.4 0-62.4-28-62.4-62.3s28-62.3 62.4-62.3 62.4 28 62.4 62.3-27.9 62.3-62.4 62.3zm.1-15.6c25.9 0 46.9-21 46.9-46.8 0-25.9-21-46.8-46.9-46.8s-46.9 21-46.9 46.8c.1 25.8 21.1 46.8 46.9 46.8z"
-                    class=""></path>
-                </svg></a>
-              <a target="_blank" href="https://playoverwatch.com/en-us/career/pc/Xhynk-11632/"><svg
-                  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                  <path fill="currentColor"
-                    d="M448.61 225.62c26.87.18 35.57-7.43 38.92-12.37 12.47-16.32-7.06-47.6-52.85-71.33 17.76-33.58 30.11-63.68 36.34-85.3 3.38-11.83 1.09-19 .45-20.25-1.72 10.52-15.85 48.46-48.2 100.05-25-11.22-56.52-20.1-93.77-23.8-8.94-16.94-34.88-63.86-60.48-88.93C252.18 7.14 238.7 1.07 228.18.22h-.05c-13.83-1.55-22.67 5.85-27.4 11-17.2 18.53-24.33 48.87-25 84.07-7.24-12.35-17.17-24.63-28.5-25.93h-.18c-20.66-3.48-38.39 29.22-36 81.29-38.36 1.38-71 5.75-93 11.23-9.9 2.45-16.22 7.27-17.76 9.72 1-.38 22.4-9.22 111.56-9.22 5.22 53 29.75 101.82 26 93.19-9.73 15.4-38.24 62.36-47.31 97.7-5.87 22.88-4.37 37.61.15 47.14 5.57 12.75 16.41 16.72 23.2 18.26 25 5.71 55.38-3.63 86.7-21.14-7.53 12.84-13.9 28.51-9.06 39.34 7.31 19.65 44.49 18.66 88.44-9.45 20.18 32.18 40.07 57.94 55.7 74.12a39.79 39.79 0 0 0 8.75 7.09c5.14 3.21 8.58 3.37 8.58 3.37-8.24-6.75-34-38-62.54-91.78 22.22-16 45.65-38.87 67.47-69.27 122.82 4.6 143.29-24.76 148-31.64 14.67-19.88 3.43-57.44-57.32-93.69zm-77.85 106.22c23.81-37.71 30.34-67.77 29.45-92.33 27.86 17.57 47.18 37.58 49.06 58.83 1.14 12.93-8.1 29.12-78.51 33.5zM216.9 387.69c9.76-6.23 19.53-13.12 29.2-20.49 6.68 13.33 13.6 26.1 20.6 38.19-40.6 21.86-68.84 12.76-49.8-17.7zm215-171.35c-10.29-5.34-21.16-10.34-32.38-15.05a722.459 722.459 0 0 0 22.74-36.9c39.06 24.1 45.9 53.18 9.64 51.95zM279.18 398c-5.51-11.35-11-23.5-16.5-36.44 43.25 1.27 62.42-18.73 63.28-20.41 0 .07-25 15.64-62.53 12.25a718.78 718.78 0 0 0 85.06-84q13.06-15.31 24.93-31.11c-.36-.29-1.54-3-16.51-12-51.7 60.27-102.34 98-132.75 115.92-20.59-11.18-40.84-31.78-55.71-61.49-20-39.92-30-82.39-31.57-116.07 12.3.91 25.27 2.17 38.85 3.88-22.29 36.8-14.39 63-13.47 64.23 0-.07-.95-29.17 20.14-59.57a695.23 695.23 0 0 0 44.67 152.84c.93-.38 1.84.88 18.67-8.25-26.33-74.47-33.76-138.17-34-173.43 20-12.42 48.18-19.8 81.63-17.81 44.57 2.67 86.36 15.25 116.32 30.71q-10.69 15.66-23.33 32.47C365.63 152 339.1 145.84 337.5 146c.11 0 25.9 14.07 41.52 47.22a717.63 717.63 0 0 0-115.34-31.71 646.608 646.608 0 0 0-39.39-6.05c-.07.45-1.81 1.85-2.16 20.33C300 190.28 358.78 215.68 389.36 233c.74 23.55-6.95 51.61-25.41 79.57-24.6 37.31-56.39 67.23-84.77 85.43zm27.4-287c-44.56-1.66-73.58 7.43-94.69 20.67 2-52.3 21.31-76.38 38.21-75.28C267 52.15 305 108.55 306.58 111zm-130.65 3.1c.48 12.11 1.59 24.62 3.21 37.28-14.55-.85-28.74-1.25-42.4-1.26-.08 3.24-.12-51 24.67-49.59h.09c5.76 1.09 10.63 6.88 14.43 13.57zm-28.06 162c20.76 39.7 43.3 60.57 65.25 72.31-46.79 24.76-77.53 20-84.92 4.51-.2-.21-11.13-15.3 19.67-76.81zm210.06 74.8"
-                    class=""></path>
-                </svg></a>
-            </div>
-          </div>
-          <div id="profile-actions" class="grid columns-2 no-gap">
-            <a class="inline-flex align-center justify-center" href="#"
-              onclick="var link = document.querySelector('a[href=\'#donate\']'); if(link!=null){ simulateClick(link); }"><span
-                style="margin-right: 6px;">Support Me</span> <svg viewBox="0 0 24 24" width="24" height="24"
-                stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
-                class="css-i6dzq1">
-                <path
-                  d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
-                </path>
-              </svg></a>
-            <a class="inline-flex align-center justify-center" href="#"
-              onclick="var link = document.querySelector('a[href=\'#contact\']'); if(link!=null){ simulateClick(link); }"><span
-                style="margin-right: 6px;">Contact</span> <svg viewBox="0 0 24 24" width="24" height="24"
-                stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
-                class="css-i6dzq1">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                <polyline points="22,6 12,13 2,6"></polyline>
-              </svg></a>
-          </div>
+<body>
+
+  <!-- ======= Mobile nav toggle button ======= -->
+  <i class="bi bi-list mobile-nav-toggle d-xl-none"></i>
+
+  <!-- ======= Header ======= -->
+  <header id="header">
+    <div class="d-flex flex-column">
+
+      <div class="profile">
+        <img src="assets/img/profile-img.jpg" alt="" class="img-fluid rounded-circle">
+        <h1 class="text-light"><a href="index.html">Alex Smith</a></h1>
+        <div class="social-links mt-3 text-center">
+          <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
+          <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
+          <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
+          <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
+          <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
         </div>
       </div>
-      <div id="section-container" class="flex-grow">
-        <section id="about" class="grid columns-2 no-gap">
-          <header class="span-all flex space-between">
-            <h2>About</h2>
-            <a href="https://whirlocal.io/company/xhynk/?_wl=186" target="_blank"><img class="whirlocal-badge"
-                id="social-proof-badge" alt="Current Aggregate Score for Xhynk"
-                src="https://whirlocal.io/image-gen/badges/social-proof/?id=450181" /></a>
-          </header>
-          <div id="bio-intro"><strong>Howdy! I'm Alexander Demchak.</strong><br>I'm known colloquially online as Xhynk
-            (pronounced "zinc"). I've been a web developer since 2010, and now work mainly with PHP and its associated
-            languages.</div>
-          <div id="about-stats" class="grid columns-1 small-gap">
-            <div class="inline-flex align-center space-between">
-              <mark>Age:</mark><span>30 Years</span>
-            </div>
-            <div class="inline-flex align-center space-between">
-              <mark>Freelance:</mark><span>Available</span>
-            </div>
-            <div class="inline-flex align-center space-between">
-              <mark>Location:</mark><span>Salem, Oregon - USA</span>
-            </div>
-            <div class="inline-flex align-center space-between">
-              <mark>Language:</mark><span>English</span>
-            </div>
+
+      <nav id="navbar" class="nav-menu navbar">
+        <ul>
+          <li><a href="#hero" class="nav-link scrollto active"><i class="bx bx-home"></i> <span>Home</span></a></li>
+          <li><a href="#about" class="nav-link scrollto"><i class="bx bx-user"></i> <span>About</span></a></li>
+          <li><a href="#resume" class="nav-link scrollto"><i class="bx bx-file-blank"></i> <span>Resume</span></a></li>
+          <li><a href="#portfolio" class="nav-link scrollto"><i class="bx bx-book-content"></i> <span>Portfolio</span></a></li>
+          <li><a href="#services" class="nav-link scrollto"><i class="bx bx-server"></i> <span>Services</span></a></li>
+          <li><a href="#contact" class="nav-link scrollto"><i class="bx bx-envelope"></i> <span>Contact</span></a></li>
+        </ul>
+      </nav><!-- .nav-menu -->
+    </div>
+  </header><!-- End Header -->
+
+  <!-- ======= Hero Section ======= -->
+  <section id="hero" class="d-flex flex-column justify-content-center align-items-center">
+    <div class="hero-container" data-aos="fade-in">
+      <h1>Alex Smith</h1>
+      <p>I'm <span class="typed" data-typed-items="Designer, Developer, Freelancer, Photographer"></span></p>
+    </div>
+  </section><!-- End Hero -->
+
+  <main id="main">
+
+    <!-- ======= About Section ======= -->
+    <section id="about" class="about">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>About</h2>
+          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-4" data-aos="fade-right">
+            <img src="assets/img/profile-img.jpg" class="img-fluid" alt="">
           </div>
-          <header class="span-all">
-            <h2>Expertise</h2>
-          </header>
-          <div class="service text-center">
-            <div class="icon">
-              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polyline points="16 18 22 12 16 6"></polyline>
-                <polyline points="8 6 2 12 8 18"></polyline>
-              </svg>
-            </div>
-            <strong>Web Development</strong>
-            <p>Whether you need a simple website, help integrating a WordPress theme, or a fully customized solution - I
-              can help!</p>
-          </div>
-          <div class="service text-center">
-            <div class="icon">
-              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <path
-                  d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z">
-                </path>
-              </svg>
-            </div>
-            <strong>Debugging</strong>
-            <p>Having issues with a PHP implementation, WordPress website (theme, plugin, dashboard), database, or DNS?
-              Fear not! (check out my <a href="https://stackoverflow.com/users/933810/xhynk" target="_blank">Stack
-                Overflow</a> profile for some reassurance!)</p>
-          </div>
-          <div class="service text-center">
-            <div class="icon">
-              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
-                <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
-              </svg>
-            </div>
-            <strong>Web Presence Analysis</strong>
-            <p>I can help you find critical usablitity errors on your website, consult about your online presence, and
-              more.</p>
-          </div>
-          <div class="service text-center">
-            <div class="icon">
-              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-              </svg>
-            </div>
-            <strong>Teaching</strong>
-            <p>Stuck on a project, want to learn WordPress, have a PHP or JavaScript bug, or want to learn to empower
-              your marketing?</p>
-          </div>
-        </section>
-        <section id="reviews" class="grid columns-2 no-gap">
-          <header class="span-all flex align-center space-between">
-            <h2>
-              <span>Reviews</span>
-            </h2>
-            <a target="_blank" href="https://whirlocal.io/company/xhynk/" class="button small">Write a Review</a>
-          </header>
-          <div class="review flex-col">
-            <h4>Amazing!</h4>
-            <div class="star earned"><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor"
-                stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg></div>
-            <div class="star missed"></div>
-            <p>This is an amazingly effective and easy to use plugin. I went out searching for some code to adapt to my
-              pages to do this same thing. Even about to hire someone on Fiverr.
-              And then I came across the Content Mask plugin. It does exactly what I need in two steps.
-              Thank you!</p>
-            <div class="flex-end flex-bottom"><a class="button small" target="_blank"
-                href="https://whirlocal.io/company/xhynk/review/amazing-25/">Read Review</a></div>
-          </div>
-          <div class="review flex-col">
-            <h4>Wow! You’re Moving Fast! Very Much Appreciated!</h4>
-            <div class="star earned"><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor"
-                stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg></div>
-            <div class="star missed"></div>
-            <p>I’ve upgraded the module and there are quite a lot of changes.
-              I think I’ve got it, after a few quick tests!
-              Cheers and cold beers from Romania!
-              PS – If I found something that’s not quite right, I let you know!
-              I salute you, be safe!</p>
-            <div class="flex-end flex-bottom"><a class="button small" target="_blank"
-                href="https://whirlocal.io/company/xhynk/review/wow-youre-moving-fast-very-much-appreciated/">Read
-                Review</a></div>
-          </div>
-          <div class="review flex-col">
-            <h4>Brilliant App</h4>
-            <div class="star earned"><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor"
-                stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg></div>
-            <div class="star missed"></div>
-            <p>I'm currently using the content masking plugin with a iFrame</p>
-            <div class="flex-end flex-bottom"><a class="button small" target="_blank"
-                href="https://whirlocal.io/company/xhynk/review/brilliant-app/">Read Review</a></div>
-          </div>
-          <div class="review flex-col">
-            <h4>A Wonderful Concept!</h4>
-            <div class="star earned"><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor"
-                stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg></div>
-            <div class="star missed"></div>
-            <p>I have a hard time articulating what's swirling around in my head, and Alex took the time to really
-              extract and *understand* what I wanted. I'm super greatful for his time and effort!!</p>
-            <div class="flex-end flex-bottom"><a class="button small" target="_blank"
-                href="https://whirlocal.io/company/xhynk/review/a-wonderful-concept/">Read Review</a></div>
-          </div>
-          <div class="review flex-col">
-            <h4>Outstanding Time Saver!</h4>
-            <div class="star earned"><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor"
-                stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg></div>
-            <div class="star missed"></div>
-            <p>This plug is wonderful! It works efficiently and saved me from custom coding, subdirectories, DNS
-              changes, and more. I’m usually reluctant donate to plugins, but for this one I was more than happy to do
-              so!</p>
-            <div class="flex-end flex-bottom"><a class="button small" target="_blank"
-                href="https://whirlocal.io/company/xhynk/review/outstanding-time-saver/">Read Review</a></div>
-          </div>
-          <div class="review flex-col">
-            <h4>Must Download</h4>
-            <div class="star earned"><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor"
-                stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg></div>
-            <div class="star missed"></div>
-            <p>This works seamlessly and the developer is extremely responsive. You can tell he cares about his
-              products.</p>
-            <div class="flex-end flex-bottom"><a class="button small" target="_blank"
-                href="https://whirlocal.io/company/xhynk/review/must-download/">Read Review</a></div>
-          </div>
-          <div class="review flex-col">
-            <h4>I Just Tested It and It Works Beautifully!</h4>
-            <div class="star earned"><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor"
-                stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg></div>
-            <div class="star missed"></div>
-            <p>Thank you so much for pushing this upgrade out! It helps me more than you can even imagine with the way
-              some of my affiliate funnel is set up right now. Have a phenomenal rest of your week! I deeply appreciate
-              your work!</p>
-            <div class="flex-end flex-bottom"><a class="button small" target="_blank"
-                href="https://whirlocal.io/company/xhynk/review/i-just-tested-it-and-it-works-beautifully/">Read
-                Review</a></div>
-          </div>
-          <div class="review flex-col">
-            <h4>Great Plugin and Even Better Support!</h4>
-            <div class="star earned"><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor"
-                stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg></div>
-            <div class="star missed"></div>
-            <p>I just got the plugin and it does all that I was looking for! I tried to find a solution to my problem
-              for hours, and then I stumbled upon this plugin. Amazing. Also, the support is awesome! I noticed a small
-              bug, and he quickly updated it. Most definitely recommend it. Thank you!</p>
-            <div class="flex-end flex-bottom"><a class="button small" target="_blank"
-                href="https://whirlocal.io/company/xhynk/review/great-plugin-and-even-better-support/">Read Review</a>
-            </div>
-          </div>
-        </section>
-        <!--<section id="doggies" class="grid columns-2 no-gap invisible">
-					<header class="span-all">
-						<h2>Doggies</h2>
-					</header>
-					<div>These are my doggies</div>
-				</section>-->
-        <section id="labs" class="grid columns-2 no-gap invisible">
-          <header class="span-all">
-            <h2>Labs</h2>
-          </header>
-          <article>
-            <div class="card-content">
-              <form>
-                <h3 class="flex space-between">Character Count: <span class="count-display">0</span></h3>
-                <textarea id="character-count"
-                  onkeyup="this.previousElementSibling.querySelector('.count-display').innerText = this.value.length;"></textarea>
-              </form>
-            </div>
-          </article>
-          <article>
-            <div class="card-content">
-              <form>
-                <h3 class="flex space-between">Click Counter: <span class="count-display">0</span></h3>
-                <div class="grid columns-3 small-gap">
-                  <span class="button"
-                    onclick="var cd = this.closest('form').querySelector('.count-display'); cd.innerText = parseInt(cd.innerText) + 1; ">Increase</span>
-                  <span class="button"
-                    onclick="var cd = this.closest('form').querySelector('.count-display'); cd.innerText = parseInt(cd.innerText) - 1; ">Decrease</span>
-                  <span class="button"
-                    onclick="var cd = this.closest('form').querySelector('.count-display'); cd.innerText = 0;">Reset</span>
-                </div>
-              </form>
-            </div>
-          </article>
-          <article>
-            <div class="card-content">
-              <form>
-                <h3>Base 64 Encode</h3>
-                <input type="text" onkeyup="this.nextElementSibling.innerText = btoa(this.value);" />
-                <div class="result break-all"></div>
-              </form>
-            </div>
-          </article>
-          <article>
-            <div class="card-content">
-              <form>
-                <h3>Base 64 Decode</h3>
-                <input type="text" onkeyup="this.nextElementSibling.innerText = atob(this.value);" />
-                <div class="result break-all"></div>
-              </form>
-            </div>
-          </article>
-          <article>
-            <div class="card-content">
-              <form>
-                <h3 class="flex space-between">
-                  <span>URL Encode</span>
-                  <label class="toggle" style="font-size: 12px;">
-                    <input type="checkbox"
-                      onclick="var input = this.closest('form').querySelector('[type=\'text\']'); this.closest('form').querySelector('.result').innerText = (this.checked) ? encodeURI(input.value) : encodeURIComponent(input.value); " />
-                    <span>Ignore Components</span>
-                  </label>
-                </h3>
-                <input type="text"
-                  onkeyup="this.nextElementSibling.innerText = (this.previousElementSibling.querySelector('input').checked) ? encodeURI(this.value) : encodeURIComponent(this.value);" />
-                <div class="result break-all"></div>
-              </form>
-            </div>
-          </article>
-          <article>
-            <div class="card-content">
-              <form>
-                <h3 class="flex space-between">
-                  <span>URL Decode</span>
-                  <label class="toggle" style="font-size: 12px;">
-                    <input type="checkbox"
-                      onclick="var input = this.closest('form').querySelector('[type=\'text\']'); this.closest('form').querySelector('.result').innerText = (this.checked) ? decodeURI(input.value) : decodeURIComponent(input.value); " />
-                    <span>Ignore Components</span>
-                  </label>
-                </h3>
-                <input type="text"
-                  onkeyup="this.nextElementSibling.innerText = (this.previousElementSibling.querySelector('input').checked) ? decodeURI(this.value) : decodeURIComponent(this.value);" />
-                <div class="result break-all"></div>
-              </form>
-            </div>
-          </article>
-        </section>
-        <section id="projects" class="grid columns-2 no-gap invisible">
-          <header class="span-all">
-            <h2>Projects</h2>
-          </header>
-          <article>
-            <a href="https://whirlocal.io/get-started?_wl=186" class="image"><img
-                src="https://xhynk.com/assets/images/wl.png" alt="WhirLocal.io"></a>
-            <div class="card-content">
-              <h4>WhirLocal.io</h4>
-              <p>WhirLocal is an easy-to-use automated "Neighborhood Marketing Platform" that makes it easy to get more
-                ideal customers.</p>
-              <a class="button small" target="_blank" href="https://whirlocal.io/get-started?_wl=186">Learn More</a>
-            </div>
-          </article>
-          <article>
-            <a href="https://wordpress.org/plugins/content-mask" class="image"><img
-                src="https://xhynk.com/assets/images/pic04.png" alt="Content Mask"></a>
-            <div class="card-content">
-              <h4>Content Mask</h4>
-              <p>A robust WordPress plugin that eliminates the need for complex domain masks and forwarders.</p>
-              <a class="button small" target="_blank" href="https://wordpress.org/plugins/content-mask">Learn More</a>
-            </div>
-          </article>
-          <article>
-            <a href="https://xhynk.com/doge/" class="image"><img src="https://xhynk.com/assets/images/pic05.png"
-                alt="DogeCards"></a>
-            <div class="card-content">
-              <h4>DogeCards</h4>
-              <p>A silly project that uses PHP and Ajax to generate "Dogecards" on the fly. MySQL Database driven.</p>
-              <a class="button small" target="_blank" href="https://xhynk.com/doge/">Learn More</a>
-            </div>
-          </article>
-          <article>
-            <a href="https://xhynk.github.io/karmabot/" class="image"><img
-                src="https://xhynk.com/assets/images/pic06.png" alt="Karmabot"></a>
-            <div class="card-content">
-              <h4>Karmabot</h4>
-              <p>A sentiment detecting, database driveno allow our Slack team to award "Karma" to users.</p>
-              <a class="button small" target="_blank" href="https://xhynk.github.io/karmabot/">Learn More</a>
-            </div>
-          </article>
-          <article>
-            <a href="https://phizspa.com/" class="image"><img src="https://xhynk.com/assets/images/pic07.png"
-                alt="PhizSpa"></a>
-            <div class="card-content">
-              <h4>PhizSpa</h4>
-              <p>A website redesign for a client who underwent large-scale internal rebranding for her new location.</p>
-              <a class="button small" target="_blank" href="https://phizspa.com/">Learn More</a>
-            </div>
-          </article>
-          <article>
-            <a href="https://wordpress.org/plugins/privacy-consent-assistant/" class="image"><img
-                src="https://xhynk.com/assets/images/pic08.png" alt="Privacy &amp; Consent Assistant"></a>
-            <div class="card-content">
-              <h4>Privacy &amp; Consent Assistant</h4>
-              <p>A plugin that inserts Form Consent to all forms on the site and a Tracking Consent bar.</p>
-              <a class="button small" target="_blank"
-                href="https://wordpress.org/plugins/privacy-consent-assistant/">Learn More</a>
-            </div>
-          </article>
-          <article>
-            <a href="http://rm2.thirdrivermarketing.com/api-v2-integration/" class="image"><img
-                src="https://xhynk.com/assets/images/pic09.png" alt="Custom Reputation Engine REST API"></a>
-            <div class="card-content">
-              <h4>Custom Reputation Engine REST API</h4>
-              <p>A custom API to allow easy access to local businesses' reputation and to embed their reviews.</p>
-              <a class="button small" target="_blank"
-                href="http://rm2.thirdrivermarketing.com/api-v2-integration/">Learn More</a>
-            </div>
-          </article>
-        </section>
-        <section id="donate" class="grid columns-2 no-gap invisible">
-          <header class="span-all flex space-between">
-            <h2>Donate</h2>
-            <a class="button small" target="_blank" href="https://paypal.me/xhynk/">Donate via PayPal.me</a>
-          </header>
-          <h3 class="span-all" style="padding-top: 0; padding-bottom: 0; margin-bottom: 0;">Like what I'm doing?</h3>
-          <p class="span-all" style="padding-top: 0; padding-bottom: 0;">I love making sure my plugins, tutorials, and
-            code samples are chugging along merrily - and donations help me keep doing what I'm doing. I have a couple
-            ways to accept donations, and I'm sincerely thankful for each and every donation I get!</p>
-          <article>
-            <div class="card-content">
-              <h4>Buy me a Ko-Fi</h4>
-              <p>I drink so much coffee, it's only fitting!</p>
-              <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script>
-              <script
-                type='text/javascript'>kofiwidget2.init('Support Me on Ko-fi', '#46b798', 'G2G39IYV'); kofiwidget2.draw();</script>
-            </div>
-          </article>
-          <article>
-            <div class="card-content">
-              <h4>Donate Directly</h4>
-              <div class="grid tiny-gap columns-2">
-                <a href="https://venmo.com/Xhynk" class="button small">Venmo</a>
-                <a href="https://cash.app/$Xhynk" class="button small">CashApp</a>
-                <a href="https://paypal.me/xhynk" class="span-all button small">PayPal.me</a>
+          <div class="col-lg-8 pt-4 pt-lg-0 content" data-aos="fade-left">
+            <h3>UI/UX Designer &amp; Web Developer.</h3>
+            <p class="fst-italic">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+              magna aliqua.
+            </p>
+            <div class="row">
+              <div class="col-lg-6">
+                <ul>
+                  <li><i class="bi bi-chevron-right"></i> <strong>Birthday:</strong> <span>1 May 1995</span></li>
+                  <li><i class="bi bi-chevron-right"></i> <strong>Website:</strong> <span>www.example.com</span></li>
+                  <li><i class="bi bi-chevron-right"></i> <strong>Phone:</strong> <span>+123 456 7890</span></li>
+                  <li><i class="bi bi-chevron-right"></i> <strong>City:</strong> <span>New York, USA</span></li>
+                </ul>
+              </div>
+              <div class="col-lg-6">
+                <ul>
+                  <li><i class="bi bi-chevron-right"></i> <strong>Age:</strong> <span>30</span></li>
+                  <li><i class="bi bi-chevron-right"></i> <strong>Degree:</strong> <span>Master</span></li>
+                  <li><i class="bi bi-chevron-right"></i> <strong>PhEmailone:</strong> <span>email@example.com</span></li>
+                  <li><i class="bi bi-chevron-right"></i> <strong>Freelance:</strong> <span>Available</span></li>
+                </ul>
               </div>
             </div>
-          </article>
-          <article class="span-all">
-            <div class="card-content" id="crypto">
-              <h4>Support with Crypto</h4>
-              <p>I'm a crypto enthusiast, and these are just a few wallet addresses. If you'd like, I can send you an
-                address to a token or asset of your choice. I'm always happy to receive and learn about a new one!</p>
-              <div class="flex align-center">
-                <img src="https://xhynk.com/public/img/btc.png" style="width: 32px; float: left; margin-right: 6px;">
-                <span>19zR98JNEC4NCDMh3xjeKsxSdCyp1ruANy</span>
-              </div>
-              <div class="flex align-center">
-                <img src="https://xhynk.com/public/img/eth.png" style="width: 32px; float: left; margin-right: 6px;">
-                <span>0x0Bb8F25aC3A3BDA433c9D3Df33ee4C67446731de</span>
-              </div>
-              <div class="flex align-center">
-                <img src="https://xhynk.com/public/img/ltc.png" style="width: 32px; float: left; margin-right: 6px;">
-                <span>MFJQPCiAsG5ioQG2mT1XyQHhYx2bA6qksR</span>
-              </div>
-              <div class="flex align-center">
-                <img src="https://xhynk.com/public/img/bat.png" style="width: 32px; float: left; margin-right: 6px;">
-                <span>0x2B5bF1Ed8e22d99888DED7d3FCEf5c1865017b9C</span>
-              </div>
-              <div class="flex align-center">
-                <img src="https://xhynk.com/public/img/xlm.png" style="width: 32px; float: left; margin-right: 6px;">
-                <span>GDQP2KPQGKIHYJGXNUIYOMHARUARCA7DJT5FO2FFOOKY3B2WSQHG4W37</span><br>
-                <span style="margin-left: 38px;">Memo: 1710883615</span>
-              </div>
-            </div>
-          </article>
-        </section>
-        <section id="contact" class="grid columns-2 no-gap invisible">
-          <header class="span-all flex space-between">
-            <h2>Contact</h2>
-            <span class="grid columns-2 tiny-gap">
-              <a href="mailto:info@xhynk.com" class="button small">info@xhynk.com</a>
-              <a href="tel:‪5037655586‬" class="button small">‪(503) 765-5586‬</a>
-            </span>
-          </header>
-          <div class="span-all">
-            <p>If you have any questions or want to get in touch, feel free to contact me below. (<strong>Note:</strong>
-              Do <em>not</em> send me credentials through this form! If you need to send me any login credentials,
-              please use the form located here: <a href="https://xhynk.com/keygen/"
-                target="_blank">xhynk.com/keygen/</a>)</p>
+            <p>
+              Officiis eligendi itaque labore et dolorum mollitia officiis optio vero. Quisquam sunt adipisci omnis et ut. Nulla accusantium dolor incidunt officia tempore. Et eius omnis.
+              Cupiditate ut dicta maxime officiis quidem quia. Sed et consectetur qui quia repellendus itaque neque. Aliquid amet quidem ut quaerat cupiditate. Ab et eum qui repellendus omnis culpa magni laudantium dolores.
+            </p>
           </div>
-          <article>
-            <div class="card-content" style="padding-top: 20px;">
-              <form id="contact-form" method="POST" action="" onsubmit="ajaxSubmit(this,event);">
-                <div class="field flex-col-reverse">
-                  <input required type="text" name="name" id="name" value="" />
-                  <label for="name">Name</label>
-                </div>
-                <div class="field flex-col-reverse">
-                  <input required type="email" name="email" id="email" value="" />
-                  <label for="email">Email</label>
-                </div>
-                <div class="field flex-col-reverse">
-                  <textarea required name="message" id="message" rows="4"></textarea>
-                  <label for="message">Message</label>
-                </div>
-                <div class="field">
-                  <div class="g-recaptcha" data-sitekey=""></div>
-                </div>
-                <div class="actions">
-                  <button name="submit" value="true" class="full">Send Message</button>
-                </div>
-              </form>
+        </div>
+
+      </div>
+    </section><!-- End About Section -->
+
+    <!-- ======= Facts Section ======= -->
+    <section id="facts" class="facts">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>Facts</h2>
+          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+        </div>
+
+        <div class="row no-gutters">
+
+          <div class="col-lg-3 col-md-6 d-md-flex align-items-md-stretch" data-aos="fade-up">
+            <div class="count-box">
+              <i class="bi bi-emoji-smile"></i>
+              <span data-purecounter-start="0" data-purecounter-end="232" data-purecounter-duration="1" class="purecounter"></span>
+              <p><strong>Happy Clients</strong> consequuntur quae</p>
             </div>
-          </article>
-          <article>
-            <ul id="contact-methods" class="card-content">
-              <li>
-                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                  stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                </svg>
-                <span>Stayton, Oregon</span>
-              </li>
-              <li>
-                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                  stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                  <polyline points="22,6 12,13 2,6"></polyline>
-                </svg>
-                <a target="_blank" href="mailto:info@xhynk.com">info@xhynk.com</a>
-              </li>
-              <li>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
-                  <path fill="currentColor"
-                    d="M290.7 311L95 269.7 86.8 309l195.7 41zm51-87L188.2 95.7l-25.5 30.8 153.5 128.3zm-31.2 39.7L129.2 179l-16.7 36.5L293.7 300zM262 32l-32 24 119.3 160.3 32-24zm20.5 328h-200v39.7h200zm39.7 80H42.7V320h-40v160h359.5V320h-40z"
-                    class=""></path>
-                </svg>
-                <a target="_blank" href="https://stackoverflow.com/users/933810/xhynk">Stack Overflow</a>
-              </li>
-              <li>
-                <svg class="pluralsight" viewBox="0 0 24 24" fill="#fff" version="1.1">
-                  <title>Pluralsight logo icon</title>
-                  <g>
-                    <path d="M8,5 L8,18 L19,11.5 L8,5 Z M9,7 L17,11.5 L9,16 L9,7 Z"></path>
-                    <path d="M6,6.5 L6,16.5 L14,11.5 L6,6.5 Z M7,9 L12,11.5 L7,14 L7,9 Z"></path>
-                  </g>
-                </svg>
-                <a target="_blank" href="https://app.pluralsight.com/profile/xhynk">PluralSight</a>
-              </li>
-              <li>
-                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                  stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                  <path
-                    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
-                  </path>
-                </svg>
-                <a target="_blank" href="https://github.com/xhynk">GitHub</a>
-              </li>
-              <li>
-                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                  stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                  <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"></polygon>
-                  <line x1="12" y1="22" x2="12" y2="15.5"></line>
-                  <polyline points="22 8.5 12 15.5 2 8.5"></polyline>
-                  <polyline points="2 15.5 12 8.5 22 15.5"></polyline>
-                  <line x1="12" y1="2" x2="12" y2="8.5"></line>
-                </svg>
-                <a target="_blank" href="https://codepen.io/xhynk">CodePen.io</a>
-              <li>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                  <path fill="currentColor"
-                    d="M256 8C119.3 8 8 119.2 8 256c0 136.7 111.3 248 248 248s248-111.3 248-248C504 119.2 392.7 8 256 8zM33 256c0-32.3 6.9-63 19.3-90.7l106.4 291.4C84.3 420.5 33 344.2 33 256zm223 223c-21.9 0-43-3.2-63-9.1l66.9-194.4 68.5 187.8c.5 1.1 1 2.1 1.6 3.1-23.1 8.1-48 12.6-74 12.6zm30.7-327.5c13.4-.7 25.5-2.1 25.5-2.1 12-1.4 10.6-19.1-1.4-18.4 0 0-36.1 2.8-59.4 2.8-21.9 0-58.7-2.8-58.7-2.8-12-.7-13.4 17.7-1.4 18.4 0 0 11.4 1.4 23.4 2.1l34.7 95.2L200.6 393l-81.2-241.5c13.4-.7 25.5-2.1 25.5-2.1 12-1.4 10.6-19.1-1.4-18.4 0 0-36.1 2.8-59.4 2.8-4.2 0-9.1-.1-14.4-.3C109.6 73 178.1 33 256 33c58 0 110.9 22.2 150.6 58.5-1-.1-1.9-.2-2.9-.2-21.9 0-37.4 19.1-37.4 39.6 0 18.4 10.6 33.9 21.9 52.3 8.5 14.8 18.4 33.9 18.4 61.5 0 19.1-7.3 41.2-17 72.1l-22.2 74.3-80.7-239.6zm81.4 297.2l68.1-196.9c12.7-31.8 17-57.2 17-79.9 0-8.2-.5-15.8-1.5-22.9 17.4 31.8 27.3 68.2 27.3 107 0 82.3-44.6 154.1-110.9 192.7z"
-                    class=""></path>
-                </svg>
-                <a target="_blank" href="https://profiles.wordpress.org/alexdemchak/">WordPress.org</a>
-              </li>
-              <li>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                  <path fill="currentColor"
-                    d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"
-                    class=""></path>
-                </svg>
-                <a target="_blank" href="https://twitter.com/xhynk">Twitter</a>
-              </li>
-              <li>
-                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                  stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-                </svg>
-                <a target="_blank" href="https://www.facebook.com/alexdemchak">Facebook</a>
-              </li>
-              <li>
-                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                  stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                </svg>
-                <a target="_blank" href="https://instagram.com/xhynk">Instagram</a>
-              </li>
-              <li>
-                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-                  stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                  <circle cx="12" cy="10" r="3"></circle>
-                </svg>
-                <a target="_blank" href="https://whirlocal.io/company/xhynk/">WhirLocal</a>
-              </li>
-              <li>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
-                  <path fill="currentColor"
-                    d="M634.19 376.23l-55.47-64.37H584c9.34 0 17.84-5.43 21.78-13.92 3.94-8.47 2.56-18.48-3.47-25.61l-54.56-64.55H560c9.47 0 18.06-5.58 21.94-14.24a24.088 24.088 0 0 0-4.09-25.85l-144-160.11c-9.13-10.1-26.56-10.1-35.69 0L320 94.48l-78.16-86.9c-9.13-10.1-26.56-10.1-35.69 0l-144 160.11a24.063 24.063 0 0 0-4.09 25.85c3.88 8.66 12.47 14.24 21.94 14.24h12.25l-54.56 64.55c-6.03 7.13-7.41 17.14-3.47 25.61A24.021 24.021 0 0 0 56 311.86h5.28L5.81 376.23c-6.13 7.11-7.53 17.15-3.63 25.69a23.998 23.998 0 0 0 21.81 14.01h168v24.46l-30.29 48.43c-5.32 10.65 2.42 23.17 14.31 23.17h95.96c11.89 0 19.63-12.53 14.31-23.17L256 440.39v-24.46h128v24.46l-30.29 48.43c-5.32 10.65 2.42 23.17 14.31 23.17h95.96c11.89 0 19.63-12.53 14.31-23.17L448 440.39v-24.46h168c9.38 0 17.91-5.47 21.81-14.01 3.91-8.54 2.51-18.57-3.62-25.69zM304 367.9H76.37l89.66-104.07h-58.28l88-104.07h-61.88L224 59.55l90.13 100.2h-61.88l88 104.07h-58.28l89.66 104.07H304zm131 0l-48.29-56.04H392c9.34 0 17.84-5.43 21.78-13.92 3.94-8.47 2.56-18.48-3.47-25.61l-54.56-64.55H368c9.47 0 18.06-5.58 21.94-14.24a24.088 24.088 0 0 0-4.09-25.85l-33.55-37.31L416 59.55l90.13 100.2h-61.88l88 104.07h-58.28l89.66 104.07H435z"
-                    class=""></path>
-                </svg>
-                <a target="_blank" href="https://linktr.ee/xhynk">LinkTr.ee</a>
-              </li>
+          </div>
+
+          <div class="col-lg-3 col-md-6 d-md-flex align-items-md-stretch" data-aos="fade-up" data-aos-delay="100">
+            <div class="count-box">
+              <i class="bi bi-journal-richtext"></i>
+              <span data-purecounter-start="0" data-purecounter-end="521" data-purecounter-duration="1" class="purecounter"></span>
+              <p><strong>Projects</strong> adipisci atque cum quia aut</p>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 d-md-flex align-items-md-stretch" data-aos="fade-up" data-aos-delay="200">
+            <div class="count-box">
+              <i class="bi bi-headset"></i>
+              <span data-purecounter-start="0" data-purecounter-end="1453" data-purecounter-duration="1" class="purecounter"></span>
+              <p><strong>Hours Of Support</strong> aut commodi quaerat</p>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 d-md-flex align-items-md-stretch" data-aos="fade-up" data-aos-delay="300">
+            <div class="count-box">
+              <i class="bi bi-people"></i>
+              <span data-purecounter-start="0" data-purecounter-end="32" data-purecounter-duration="1" class="purecounter"></span>
+              <p><strong>Hard Workers</strong> rerum asperiores dolor</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section><!-- End Facts Section -->
+
+    <!-- ======= Skills Section ======= -->
+    <section id="skills" class="skills section-bg">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>Skills</h2>
+          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+        </div>
+
+        <div class="row skills-content">
+
+          <div class="col-lg-6" data-aos="fade-up">
+
+            <div class="progress">
+              <span class="skill">HTML <i class="val">100%</i></span>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+
+            <div class="progress">
+              <span class="skill">CSS <i class="val">90%</i></span>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+
+            <div class="progress">
+              <span class="skill">JavaScript <i class="val">75%</i></span>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+
+            <div class="progress">
+              <span class="skill">PHP <i class="val">80%</i></span>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+
+            <div class="progress">
+              <span class="skill">WordPress/CMS <i class="val">90%</i></span>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+
+            <div class="progress">
+              <span class="skill">Photoshop <i class="val">55%</i></span>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar" role="progressbar" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section><!-- End Skills Section -->
+
+    <!-- ======= Resume Section ======= -->
+    <section id="resume" class="resume">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>Resume</h2>
+          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-6" data-aos="fade-up">
+            <h3 class="resume-title">Sumary</h3>
+            <div class="resume-item pb-0">
+              <h4>Alex Smith</h4>
+              <p><em>Innovative and deadline-driven Graphic Designer with 3+ years of experience designing and developing user-centered digital/print marketing material from initial concept to final, polished deliverable.</em></p>
+              <ul>
+                <li>Portland par 127,Orlando, FL</li>
+                <li>(123) 456-7891</li>
+                <li>alice.barkley@example.com</li>
+              </ul>
+            </div>
+
+            <h3 class="resume-title">Education</h3>
+            <div class="resume-item">
+              <h4>Master of Fine Arts &amp; Graphic Design</h4>
+              <h5>2015 - 2016</h5>
+              <p><em>Rochester Institute of Technology, Rochester, NY</em></p>
+              <p>Qui deserunt veniam. Et sed aliquam labore tempore sed quisquam iusto autem sit. Ea vero voluptatum qui ut dignissimos deleniti nerada porti sand markend</p>
+            </div>
+            <div class="resume-item">
+              <h4>Bachelor of Fine Arts &amp; Graphic Design</h4>
+              <h5>2010 - 2014</h5>
+              <p><em>Rochester Institute of Technology, Rochester, NY</em></p>
+              <p>Quia nobis sequi est occaecati aut. Repudiandae et iusto quae reiciendis et quis Eius vel ratione eius unde vitae rerum voluptates asperiores voluptatem Earum molestiae consequatur neque etlon sader mart dila</p>
+            </div>
+          </div>
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+            <h3 class="resume-title">Professional Experience</h3>
+            <div class="resume-item">
+              <h4>Senior graphic design specialist</h4>
+              <h5>2019 - Present</h5>
+              <p><em>Experion, New York, NY </em></p>
+              <ul>
+                <li>Lead in the design, development, and implementation of the graphic, layout, and production communication materials</li>
+                <li>Delegate tasks to the 7 members of the design team and provide counsel on all aspects of the project. </li>
+                <li>Supervise the assessment of all graphic materials in order to ensure quality and accuracy of the design</li>
+                <li>Oversee the efficient use of production project budgets ranging from $2,000 - $25,000</li>
+              </ul>
+            </div>
+            <div class="resume-item">
+              <h4>Graphic design specialist</h4>
+              <h5>2017 - 2018</h5>
+              <p><em>Stepping Stone Advertising, New York, NY</em></p>
+              <ul>
+                <li>Developed numerous marketing programs (logos, brochures,infographics, presentations, and advertisements).</li>
+                <li>Managed up to 5 projects or tasks at a given time while under pressure</li>
+                <li>Recommended and consulted with clients on the most appropriate graphic design</li>
+                <li>Created 4+ design presentations and proposals a month for clients and account managers</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section><!-- End Resume Section -->
+
+    <!-- ======= Portfolio Section ======= -->
+    <section id="portfolio" class="portfolio section-bg">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>Portfolio</h2>
+          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+        </div>
+
+        <div class="row" data-aos="fade-up">
+          <div class="col-lg-12 d-flex justify-content-center">
+            <ul id="portfolio-flters">
+              <li data-filter="*" class="filter-active">All</li>
+              <li data-filter=".filter-app">App</li>
+              <li data-filter=".filter-card">Card</li>
+              <li data-filter=".filter-web">Web</li>
             </ul>
-          </article>
-        </section>
+          </div>
+        </div>
+
+        <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="100">
+
+          <div class="col-lg-4 col-md-6 portfolio-item filter-app">
+            <div class="portfolio-wrap">
+              <img src="assets/img/portfolio/portfolio-1.jpg" class="img-fluid" alt="">
+              <div class="portfolio-links">
+                <a href="assets/img/portfolio/portfolio-1.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="App 1"><i class="bx bx-plus"></i></a>
+                <a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 portfolio-item filter-web">
+            <div class="portfolio-wrap">
+              <img src="assets/img/portfolio/portfolio-2.jpg" class="img-fluid" alt="">
+              <div class="portfolio-links">
+                <a href="assets/img/portfolio/portfolio-2.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Web 3"><i class="bx bx-plus"></i></a>
+                <a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 portfolio-item filter-app">
+            <div class="portfolio-wrap">
+              <img src="assets/img/portfolio/portfolio-3.jpg" class="img-fluid" alt="">
+              <div class="portfolio-links">
+                <a href="assets/img/portfolio/portfolio-3.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="App 2"><i class="bx bx-plus"></i></a>
+                <a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 portfolio-item filter-card">
+            <div class="portfolio-wrap">
+              <img src="assets/img/portfolio/portfolio-4.jpg" class="img-fluid" alt="">
+              <div class="portfolio-links">
+                <a href="assets/img/portfolio/portfolio-4.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Card 2"><i class="bx bx-plus"></i></a>
+                <a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 portfolio-item filter-web">
+            <div class="portfolio-wrap">
+              <img src="assets/img/portfolio/portfolio-5.jpg" class="img-fluid" alt="">
+              <div class="portfolio-links">
+                <a href="assets/img/portfolio/portfolio-5.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Web 2"><i class="bx bx-plus"></i></a>
+                <a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 portfolio-item filter-app">
+            <div class="portfolio-wrap">
+              <img src="assets/img/portfolio/portfolio-6.jpg" class="img-fluid" alt="">
+              <div class="portfolio-links">
+                <a href="assets/img/portfolio/portfolio-6.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="App 3"><i class="bx bx-plus"></i></a>
+                <a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 portfolio-item filter-card">
+            <div class="portfolio-wrap">
+              <img src="assets/img/portfolio/portfolio-7.jpg" class="img-fluid" alt="">
+              <div class="portfolio-links">
+                <a href="assets/img/portfolio/portfolio-7.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Card 1"><i class="bx bx-plus"></i></a>
+                <a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 portfolio-item filter-card">
+            <div class="portfolio-wrap">
+              <img src="assets/img/portfolio/portfolio-8.jpg" class="img-fluid" alt="">
+              <div class="portfolio-links">
+                <a href="assets/img/portfolio/portfolio-8.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Card 3"><i class="bx bx-plus"></i></a>
+                <a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 portfolio-item filter-web">
+            <div class="portfolio-wrap">
+              <img src="assets/img/portfolio/portfolio-9.jpg" class="img-fluid" alt="">
+              <div class="portfolio-links">
+                <a href="assets/img/portfolio/portfolio-9.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Web 3"><i class="bx bx-plus"></i></a>
+                <a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section><!-- End Portfolio Section -->
+
+    <!-- ======= Services Section ======= -->
+    <section id="services" class="services">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>Services</h2>
+          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up">
+            <div class="icon"><i class="bi bi-briefcase"></i></div>
+            <h4 class="title"><a href="">Lorem Ipsum</a></h4>
+            <p class="description">Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident</p>
+          </div>
+          <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up" data-aos-delay="100">
+            <div class="icon"><i class="bi bi-card-checklist"></i></div>
+            <h4 class="title"><a href="">Dolor Sitema</a></h4>
+            <p class="description">Minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat tarad limino ata</p>
+          </div>
+          <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up" data-aos-delay="200">
+            <div class="icon"><i class="bi bi-bar-chart"></i></div>
+            <h4 class="title"><a href="">Sed ut perspiciatis</a></h4>
+            <p class="description">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur</p>
+          </div>
+          <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up" data-aos-delay="300">
+            <div class="icon"><i class="bi bi-binoculars"></i></div>
+            <h4 class="title"><a href="">Magni Dolores</a></h4>
+            <p class="description">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+          </div>
+          <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up" data-aos-delay="400">
+            <div class="icon"><i class="bi bi-brightness-high"></i></div>
+            <h4 class="title"><a href="">Nemo Enim</a></h4>
+            <p class="description">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque</p>
+          </div>
+          <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up" data-aos-delay="500">
+            <div class="icon"><i class="bi bi-calendar4-week"></i></div>
+            <h4 class="title"><a href="">Eiusmod Tempor</a></h4>
+            <p class="description">Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi</p>
+          </div>
+        </div>
+
+      </div>
+    </section><!-- End Services Section -->
+
+    <!-- ======= Testimonials Section ======= -->
+    <section id="testimonials" class="testimonials section-bg">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>Testimonials</h2>
+          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+        </div>
+
+        <div class="testimonials-slider swiper" data-aos="fade-up" data-aos-delay="100">
+          <div class="swiper-wrapper">
+
+            <div class="swiper-slide">
+              <div class="testimonial-item" data-aos="fade-up">
+                <p>
+                  <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                  Proin iaculis purus consequat sem cure digni ssim donec porttitora entum suscipit rhoncus. Accusantium quam, ultricies eget id, aliquam eget nibh et. Maecen aliquam, risus at semper.
+                  <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+                </p>
+                <img src="assets/img/testimonials/testimonials-1.jpg" class="testimonial-img" alt="">
+                <h3>Saul Goodman</h3>
+                <h4>Ceo &amp; Founder</h4>
+              </div>
+            </div><!-- End testimonial item -->
+
+            <div class="swiper-slide">
+              <div class="testimonial-item" data-aos="fade-up" data-aos-delay="100">
+                <p>
+                  <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                  Export tempor illum tamen malis malis eram quae irure esse labore quem cillum quid cillum eram malis quorum velit fore eram velit sunt aliqua noster fugiat irure amet legam anim culpa.
+                  <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+                </p>
+                <img src="assets/img/testimonials/testimonials-2.jpg" class="testimonial-img" alt="">
+                <h3>Sara Wilsson</h3>
+                <h4>Designer</h4>
+              </div>
+            </div><!-- End testimonial item -->
+
+            <div class="swiper-slide">
+              <div class="testimonial-item" data-aos="fade-up" data-aos-delay="200">
+                <p>
+                  <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                  Enim nisi quem export duis labore cillum quae magna enim sint quorum nulla quem veniam duis minim tempor labore quem eram duis noster aute amet eram fore quis sint minim.
+                  <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+                </p>
+                <img src="assets/img/testimonials/testimonials-3.jpg" class="testimonial-img" alt="">
+                <h3>Jena Karlis</h3>
+                <h4>Store Owner</h4>
+              </div>
+            </div><!-- End testimonial item -->
+
+            <div class="swiper-slide">
+              <div class="testimonial-item" data-aos="fade-up" data-aos-delay="300">
+                <p>
+                  <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                  Fugiat enim eram quae cillum dolore dolor amet nulla culpa multos export minim fugiat minim velit minim dolor enim duis veniam ipsum anim magna sunt elit fore quem dolore labore illum veniam.
+                  <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+                </p>
+                <img src="assets/img/testimonials/testimonials-4.jpg" class="testimonial-img" alt="">
+                <h3>Matt Brandon</h3>
+                <h4>Freelancer</h4>
+              </div>
+            </div><!-- End testimonial item -->
+
+            <div class="swiper-slide">
+              <div class="testimonial-item" data-aos="fade-up" data-aos-delay="400">
+                <p>
+                  <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                  Quis quorum aliqua sint quem legam fore sunt eram irure aliqua veniam tempor noster veniam enim culpa labore duis sunt culpa nulla illum cillum fugiat legam esse veniam culpa fore nisi cillum quid.
+                  <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+                </p>
+                <img src="assets/img/testimonials/testimonials-5.jpg" class="testimonial-img" alt="">
+                <h3>John Larson</h3>
+                <h4>Entrepreneur</h4>
+              </div>
+            </div><!-- End testimonial item -->
+
+          </div>
+          <div class="swiper-pagination"></div>
+        </div>
+
+      </div>
+    </section><!-- End Testimonials Section -->
+
+    <!-- ======= Contact Section ======= -->
+    <section id="contact" class="contact">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>Contact</h2>
+          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+        </div>
+
+        <div class="row" data-aos="fade-in">
+
+          <div class="col-lg-5 d-flex align-items-stretch">
+            <div class="info">
+              <div class="address">
+                <i class="bi bi-geo-alt"></i>
+                <h4>Location:</h4>
+                <p>A108 Adam Street, New York, NY 535022</p>
+              </div>
+
+              <div class="email">
+                <i class="bi bi-envelope"></i>
+                <h4>Email:</h4>
+                <p>info@example.com</p>
+              </div>
+
+              <div class="phone">
+                <i class="bi bi-phone"></i>
+                <h4>Call:</h4>
+                <p>+1 5589 55488 55s</p>
+              </div>
+
+              <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12097.433213460943!2d-74.0062269!3d40.7101282!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xb89d1fe6bc499443!2sDowntown+Conference+Center!5e0!3m2!1smk!2sbg!4v1539943755621" frameborder="0" style="border:0; width: 100%; height: 290px;" allowfullscreen></iframe>
+            </div>
+
+          </div>
+
+          <div class="col-lg-7 mt-5 mt-lg-0 d-flex align-items-stretch">
+            <form action="forms/contact.php" method="post" role="form" class="php-email-form">
+              <div class="row">
+                <div class="form-group col-md-6">
+                  <label for="name">Your Name</label>
+                  <input type="text" name="name" class="form-control" id="name" required>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="name">Your Email</label>
+                  <input type="email" class="form-control" name="email" id="email" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="name">Subject</label>
+                <input type="text" class="form-control" name="subject" id="subject" required>
+              </div>
+              <div class="form-group">
+                <label for="name">Message</label>
+                <textarea class="form-control" name="message" rows="10" required></textarea>
+              </div>
+              <div class="my-3">
+                <div class="loading">Loading</div>
+                <div class="error-message"></div>
+                <div class="sent-message">Your message has been sent. Thank you!</div>
+              </div>
+              <div class="text-center"><button type="submit">Send Message</button></div>
+            </form>
+          </div>
+
+        </div>
+
+      </div>
+    </section><!-- End Contact Section -->
+
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer">
+    <div class="container">
+      <div class="copyright">
+        &copy; Copyright <strong><span>iPortfolio</span></strong>
+      </div>
+      <div class="credits">
+        <!-- All the links in the footer should remain intact. -->
+        <!-- You can delete the links only if you purchased the pro version. -->
+        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/iportfolio-bootstrap-portfolio-websites-template/ -->
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
       </div>
     </div>
-  </main>
-  <div id="stack-exchange" class="flex align-center space-around">
-    <a target="_blank" class="stack-exchange inline-flex align-center"
-      href="https://stackoverflow.com/users/933810/xhynk" data-accept="86"><svg xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 384 512">
-        <path fill="currentColor"
-          d="M290.7 311L95 269.7 86.8 309l195.7 41zm51-87L188.2 95.7l-25.5 30.8 153.5 128.3zm-31.2 39.7L129.2 179l-16.7 36.5L293.7 300zM262 32l-32 24 119.3 160.3 32-24zm20.5 328h-200v39.7h200zm39.7 80H42.7V320h-40v160h359.5V320h-40z"
-          class=""></path>
-      </svg><span class="reputation">10,680</span><span class="badges flex align-center"><span
-          class="gold">06</span><span class="silver">26</span><span class="bronze">56</span></span></a><a
-      target="_blank" class="stack-exchange inline-flex align-center"
-      href="https://wordpress.stackexchange.com/users/13724/xhynk" data-accept=""><svg
-        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-        <path fill="currentColor"
-          d="M256 8C119.3 8 8 119.2 8 256c0 136.7 111.3 248 248 248s248-111.3 248-248C504 119.2 392.7 8 256 8zM33 256c0-32.3 6.9-63 19.3-90.7l106.4 291.4C84.3 420.5 33 344.2 33 256zm223 223c-21.9 0-43-3.2-63-9.1l66.9-194.4 68.5 187.8c.5 1.1 1 2.1 1.6 3.1-23.1 8.1-48 12.6-74 12.6zm30.7-327.5c13.4-.7 25.5-2.1 25.5-2.1 12-1.4 10.6-19.1-1.4-18.4 0 0-36.1 2.8-59.4 2.8-21.9 0-58.7-2.8-58.7-2.8-12-.7-13.4 17.7-1.4 18.4 0 0 11.4 1.4 23.4 2.1l34.7 95.2L200.6 393l-81.2-241.5c13.4-.7 25.5-2.1 25.5-2.1 12-1.4 10.6-19.1-1.4-18.4 0 0-36.1 2.8-59.4 2.8-4.2 0-9.1-.1-14.4-.3C109.6 73 178.1 33 256 33c58 0 110.9 22.2 150.6 58.5-1-.1-1.9-.2-2.9-.2-21.9 0-37.4 19.1-37.4 39.6 0 18.4 10.6 33.9 21.9 52.3 8.5 14.8 18.4 33.9 18.4 61.5 0 19.1-7.3 41.2-17 72.1l-22.2 74.3-80.7-239.6zm81.4 297.2l68.1-196.9c12.7-31.8 17-57.2 17-79.9 0-8.2-.5-15.8-1.5-22.9 17.4 31.8 27.3 68.2 27.3 107 0 82.3-44.6 154.1-110.9 192.7z"
-          class=""></path>
-      </svg><span class="reputation">745</span><span class="badges flex align-center"><span
-          class="silver">04</span><span class="bronze">18</span></span></a>
-  </div>
-  <script>
-    function apiPromise(method, url, data) {
-      return new Promise(function (resolve, reject) {
-        var request = new XMLHttpRequest();
+  </footer><!-- End  Footer -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/vendor/typed.js/typed.umd.js"></script>
+  <script src="assets/vendor/waypoints/noframework.waypoints.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
 
-        if ('withCredentials' in request) {
-          request.open(method, url, true);
-        } else if (typeof XDomainRequest != 'undefined') {
-          request = new XDomainRequest();
-          request.open(method, url);
-        } else {
-          request = null;
-        }
-
-        request.onload = function () {
-          if (request.status === 200) {
-            resolve(request.response);
-          } else {
-            reject(Error('Interaction failed:' + request.statusText));
-          }
-        };
-
-        request.onerror = function () {
-          reject(Error('Network error.'));
-        };
-
-        request.send((isFormData(data)) ? data : toFormData(data));
-      });
-    }
-
-    function isFormData(obj) {
-      return (obj instanceof FormData) ? true : false;
-    }
-
-    function objectifyForm(form) {
-      var data = {};
-      var fields = form.querySelectorAll('[name]');
-
-      if (!isIterable(fields))
-        return false;
-
-      fields.forEach(function (field) {
-        // We don't pass readonly
-        if (field.readOnly)
-          return false;
-
-        // Does this field have no value?
-        if (typeof field.value == 'undefined')
-          return false;
-
-        // Is this a CHECKED item?
-        if ((field.type == 'checkbox' || field.type == 'radio') && !field.checked)
-          return false;
-
-        if (field.name == null) {
-          field.name = field.getAttribute('name');
-        }
-
-        // This shouldn't have slipped in
-        if (field.name == null)
-          return false;
-
-        var dataName = field.name.replace('[]', '');
-
-        if (field.name.includes('[]')) {
-          // Is an array field
-          if (data[dataName] == null) {
-            data[dataName] = [];
-          }
-        }
-
-        if (field.value != null && field.value != '') {
-          var value = isNaN(field.value) ? field.value.valueOf() : parseFloat(field.value);
-
-          if (Array.isArray(data[dataName])) {
-            data[dataName].push(value);
-          } else {
-            data[dataName] = value;
-          }
-        }
-      });
-
-      var ckEditors = form.querySelectorAll('.ck-editor'); // There's a loaded CK Editor instance
-      if (ckEditors.length > 0) {
-        ckEditors.forEach(function (cke) {
-          var ckeID = cke.previousElementSibling.id;
-          var ckeName = cke.previousElementSibling.getAttribute('name');
-          var ckeVal = window.ckeditors[ckeID].getData();
-
-          if (ckeVal != null) {
-            data[ckeName] = ckeVal;
-          }
-        });
-      }
-
-      return data;
-    }
-
-    function isEmpty(str) {
-      return str.replace(/^\s+|\s+$/g, '').length == 0;
-    }
-
-    function isIterable(obj) {
-      // checks for null and undefined
-      if (obj == null)
-        return false;
-
-      return typeof obj[Symbol.iterator] === 'function';
-    }
-
-    function toFormData(item) {
-      var formData = new FormData();
-
-      if (isElement(item)) {
-        if (item.tagName === 'FORM') {
-          item = objectifyForm(item);
-        }
-      }
-
-      if (typeof item === 'object') {
-        Object.keys(item).forEach(function (key) {
-          if (item[key] !== null && item[key] !== '') {
-            //item[key] = JSON.stringify(item[key]);
-            if (Array.isArray(item[key]) || typeof item[key] === 'object') {
-              item[key] = JSON.stringify(item[key]);
-            }
-            formData.append(key, item[key]);
-          }
-        });
-      } else {
-        return false;
-      }
-
-      return formData;
-    }
-
-    function isElement(obj) {
-      try {
-        return obj instanceof HTMLElement;
-      } catch (e) {
-        return (typeof obj === 'object') &&
-          (obj.nodeType === 1) && (typeof obj.style === 'object') &&
-          (typeof obj.ownerDocument === 'object');
-      }
-    }
-
-    function queryStringToObject(queryString) {
-      var urlParams = new URLSearchParams(queryString);
-
-      return paramsToObject(urlParams.entries());
-    }
-
-    function paramsToObject(entries) {
-      var result = {};
-
-      for (var entry of entries) {
-        var [key, value] = entry;
-        result[key] = value;
-      }
-
-      return result;
-    }
-
-    function isJson(item) {
-      item = typeof item !== "string"
-        ? JSON.stringify(item)
-        : item;
-
-      try {
-        item = JSON.parse(item);
-      } catch (e) {
-        return false;
-      }
-
-      return (typeof item === "object" && item !== null) ? true : false
-    }
-
-    function ajaxSubmit(form, e) {
-      e.preventDefault();
-
-      var submit = form.querySelector('[name="submit"]');
-      submit.classList.add('loading');
-
-      apiPromise('POST', form.getAttribute('action'), form).then(function (response) {
-        console.log(response);
-        submit.classList.remove('loading');
-        submit.classList.add('removing');
-        setTimeout(function () {
-          submit.innerText = 'Thanks, I\'ll be in touch!';
-          submit.classList.remove('removing');
-          submit.removeAttribute('name');
-          submit.setAttribute('disabled', 'disabled');
-        }, 351);
-      }).catch(function (reason) {
-        console.log(reason);
-        alert('Something went wrong. Please email me at info@xhynk.com');
-        submit.classList.remove('loading');
-      });
-    }
-
-    var simulateClick = function (elem) {
-      // Create our event (with options)
-      var evt = new MouseEvent('click', {
-        bubbles: true,
-        cancelable: true,
-        view: window
-      });
-      // If cancelled, don't dispatch our event
-      var canceled = !elem.dispatchEvent(evt);
-    };
-
-    // Blobby!
-    var c = document.getElementById('wave'),
-      ctx = c.getContext('2d'),
-      cw = c.width,
-      ch = c.height,
-      points = [],
-      tick = 0,
-      opt = {
-        count: 10,
-        range: {
-          x: 10,
-          y: 20
-        },
-        duration: {
-          min: 40,
-          max: 180
-        },
-        thickness: 0,
-        strokeColor: '#191b21',
-        level: .1,
-        curved: true
-      },
-      rand = function (min, max) {
-        return Math.floor((Math.random() * (max - min + 1)) + min);
-      },
-      ease = function (t, b, c, d) {
-        if ((t /= d / 2) < 1) return c / 2 * t * t + b;
-        return -c / 2 * ((--t) * (t - 2) - 1) + b;
-      };
-
-    ctx.lineJoin = 'round';
-    ctx.lineWidth = opt.thickness;
-    ctx.strokeStyle = opt.strokeColor;
-    ctx.imageSmoothingEnabled;
-
-    var Point = function (config) {
-      this.anchorX = config.x;
-      this.anchorY = config.y;
-      this.x = config.x;
-      this.y = config.y;
-      this.setTarget();
-    };
-
-    Point.prototype.setTarget = function () {
-      this.initialX = this.x;
-      this.initialY = this.y;
-      this.targetX = this.anchorX + rand(0, opt.range.x * 2) - opt.range.x;
-      this.targetY = this.anchorY + rand(0, opt.range.y * 2) - opt.range.y;
-      this.tick = 0;
-      this.duration = rand(opt.duration.min, opt.duration.max);
-    }
-
-    Point.prototype.update = function () {
-      var dx = this.targetX - this.x;
-      var dy = this.targetY - this.y;
-      var dist = Math.sqrt(dx * dx + dy * dy);
-
-      if (Math.abs(dist) <= 0) {
-        this.setTarget();
-      } else {
-        var t = this.tick;
-        var b = this.initialY;
-        var c = this.targetY - this.initialY;
-        var d = this.duration;
-        this.y = ease(t, b, c, d);
-
-        b = this.initialX;
-        c = this.targetX - this.initialX;
-        d = this.duration;
-        this.x = ease(t, b, c, d);
-
-        this.tick++;
-      }
-    };
-
-    Point.prototype.render = function () {
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, 3, 0, Math.PI * 2, false);
-      ctx.fillStyle = '#191b21';
-      ctx.fill();
-    };
-
-    var updatePoints = function () {
-      var i = points.length;
-
-      while (i--) {
-        points[i].update();
-      }
-    };
-
-    var renderPoints = function () {
-      var i = points.length;
-      while (i--) {
-        points[i].render();
-      }
-    };
-
-    var renderShape = function () {
-      ctx.beginPath();
-      var pointCount = points.length;
-      ctx.moveTo(points[0].x, points[0].y);
-
-      var i;
-      for (i = 0; i < pointCount - 1; i++) {
-        var c = (points[i].x + points[i + 1].x) / 2;
-        var d = (points[i].y + points[i + 1].y) / 2;
-        ctx.quadraticCurveTo(points[i].x, points[i].y, c, d);
-      }
-
-      ctx.lineTo(-opt.range.x - opt.thickness, ch + opt.thickness);
-      ctx.lineTo(cw + opt.range.x + opt.thickness, ch + opt.thickness);
-      ctx.closePath();
-      ctx.fillStyle = '#191b21';
-      ctx.fill();
-      ctx.stroke();
-    };
-
-    var clear = function () {
-      ctx.clearRect(0, 0, cw, ch);
-    };
-
-    var loop = function () {
-      window.requestAnimFrame(loop, c);
-      tick++;
-      clear();
-      updatePoints();
-      renderShape();
-    };
-
-    var i = opt.count + 2;
-    var spacing = (cw + (opt.range.x * 2)) / (opt.count - 1);
-
-    while (i--) {
-      points.push(new Point({
-        x: (spacing * (i - 1)) - opt.range.x,
-        y: ch - (ch * opt.level)
-      }));
-    }
-
-    window.requestAnimFrame = function () { return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (a) { window.setTimeout(a, 1000) } }();
-
-    loop();
-
-    // Look-er At-er
-    var container = document.querySelector('#container');
-    var profile = document.querySelector('#profile');
-    var sections = document.querySelector('#section-container');
-    var clappy = document.querySelector('.applause-container');
-
-    document.body.onmousemove = function (e) {
-      var range = { x: 3, y: 6 }, // Maxmimum degrees of deflection
-        x = event.clientX,
-        y = event.clientY,
-        width = window.innerWidth,
-        height = window.innerHeight,
-        center = { x: width / 2, y: height / 2 },
-        r1, r2, rY, rX; // For use later
-
-      r1 = (x > center.x) ? x - center.x : (center.x - x) * -1;
-      r2 = (y > center.y) ? (y - center.y) * -1 : center.y - y;
-
-      rY = (r1 / center.x) * range.x;
-      rX = (r2 / center.y) * range.y;
-
-      container.style.transform = 'rotateY(' + rY + 'deg) ' +
-        'rotateX(' + rX + 'deg) ';
-
-      container.style.transformOrigin = r1 * .025 + '% ' + r2 * -.025 + '%';
-
-      profile.style.transform = 'translateX(' + rY / 1.1 + '%) ' +
-        'translateY(' + rX / 1.1 * -1 + '%) ';
-
-      sections.style.transform = 'translateX(' + rY / 2.5 + '%) ' +
-        'translateY(' + rX / 2.5 * -1 + '%) ';
-
-      clappy.style.transform = 'translateX(' + rY / .7 + '%) ' +
-        'translateY(' + rX / .7 * -1 + '%) ';
-    };
-
-    document.body.addEventListener('mouseleave', function (e) {
-      //document.body.classList.add('no-look');
-      //container.removeAttribute('style');
-      //sections.removeAttribute('style');
-      //profile.removeAttribute('style');
-    });
-
-    document.body.addEventListener('mouseenter', function (e) {
-      setTimeout(function () {
-        document.body.classList.remove('no-look');
-      }, 350);
-    });
-
-    var audiotypes = {
-      "mp3": "audio/mpeg",
-      "mp4": "audio/mp4",
-      "ogg": "audio/ogg",
-      "wav": "audio/wav"
-    }
-
-    function ss_soundbits(sound) {
-      var audio_element = document.createElement('audio');
-      if (audio_element.canPlayType) {
-        for (var i = 0; i < arguments.length; i++) {
-          var source_element = document.createElement('source');
-          source_element.setAttribute('src', arguments[i]);
-          /*if (arguments[i].match(/\.(\w+)$/i))
-              source_element.setAttribute('type', audiotypes[RegExp.$1])*/
-          audio_element.setAttribute('type', 'audio/x-m4a');
-          audio_element.appendChild(source_element);
-        }
-        audio_element.load();
-        audio_element.playclip = function () {
-          //audio_element.pause()
-          audio_element.currentTime = 0;
-          audio_element.play();
-        };
-        return audio_element;
-      }
-    }
-
-    function randomInt(min, max) {
-      return Math.floor(Math.random() * (max - min + 1) + min);
-    }
-
-    function generateParticles(el, min, max, timeout, sizing) {
-      min = min ? min : 12;
-      max = max ? max : 24;
-      sizing = sizing ? sizing : 6;
-      timeout = timeout ? timeout : 0;
-
-      var number = randomInt(min, max);
-      var colors = ["#0095ee", "#ee3d69", "#0350b9", "#DDCA60"];
-      var particle;
-
-      for (var i = 0; i < number; i++) {
-        particle = document.createElement("span");
-        particle.classList.add("particle");
-        el.insertBefore(particle, el.firstChild);
-      }
-
-      var particles = el.querySelectorAll('.particle');
-      particles.forEach(function (particle) {
-        var size = Math.floor(Math.random() * sizing) + sizing / 2;
-        var color = colors[Math.floor(Math.random() * colors.length)];
-        var x = randomInt(200, 550) * randomInt(-1, 1);
-        var y = randomInt(200, 550) * randomInt(-1, 1);
-        var xform = randomInt(2, 4);
-        var opacity = xform - 0.25;
-        var top = randomInt(0, el.offsetHeight) / 2;
-        var left = randomInt(0, el.offsetWidth) / 2;
-
-        var t = randomInt(0, 1) ? '+' : '-';
-        var l = randomInt(0, 1) ? '+' : '-';
-
-        particle.style.top = 'calc(50% ' + t + ' ' + top + 'px)';
-        particle.style.left = 'calc(50% ' + l + ' ' + left + 'px)';
-
-        particle.style.width = size + "px";
-        particle.style.height = size + "px";
-        particle.style.background = color;
-
-        particle.style.transition = "transform " + xform + "s cubic-bezier(0,1,.4,1), opacity " + opacity + "s ease-in-out";
-        particle.style.opacity = 0;
-        particle.style.transform = "translate(" + x + "%, " + y + "%) scale(0)";
-
-        setTimeout(function () {
-          particle.remove();
-        }, 1000);
-      });
-    }
-
-    var clickUpsound = ss_soundbits('https://xhynk.com/assets/sound-kit/Full Volume/Buttons and Navigation/Button 4.m4a'),
-      clickDownsound = ss_soundbits('https://xhynk.com/assets/sound-kit/Full Volume/Buttons and Navigation/Button 6.m4a'),
-      awardSound = ss_soundbits('https://xhynk.com/assets/sound-kit/Full Volume/Complete and Success/Success 2.m4a'),
-      alertSound = ss_soundbits('https://xhynk.com/assets/sound-kit/Full Volume/Notifications and Alerts/Alert 3.m4a'),
-      alertSound2 = ss_soundbits('https://xhynk.com/assets/sound-kit/Full Volume/Notifications and Alerts/Alert 4.m4a');
-
-    var clapTimer;                  // Timer identifier
-    var doneClappingInterval = 750; // Time in ms
-
-    function applaud(el, e) {
-      if (e.button == null || e.button == 1)
-        return false;
-
-      var dir = 1;
-      dir = (e.button == 0) ? 1 : -1;
-
-      var claps = parseInt(el.getAttribute('data-claps'));
-      var totalClaps = el.querySelector('.total-claps');
-
-      if (claps <= 0 && dir == -1)
-        return false;
-
-      if (claps >= 10 && dir == 1)
-        return false;
-
-      var newTotal = parseInt(totalClaps.innerText.replace(/,/g, '')) + dir;
-      totalClaps.innerText = Intl.NumberFormat('en-US').format(newTotal);
-
-      if (claps == 9 && dir == 1) {
-        //generateParticles(el, 12, 24, 0, 18);
-        generateParticles(el, 48, 64, 0, 22);
-        awardSound.playclip();
-      } else if (claps == 10 && dir == -1) {
-        alertSound.playclip();
-      } else {
-        if (dir == 1) {
-          generateParticles(el, 6, 12, 0, 18);
-          clickUpsound.playclip();
-        } else {
-          clickDownsound.playclip();
-        }
-      }
-
-      el.setAttribute('data-claps', parseInt(claps) + dir);
-
-      if (typeof clapTimer !== 'undefined')
-        clearTimeout(clapTimer);
-
-      clapTimer = setTimeout(function () {
-        // SEND VIA POST TO DATABASE
-      }, doneClappingInterval);
-    }
-
-    var menu = document.querySelector('nav');
-    var pages = document.querySelectorAll('#section-container > section');
-
-    if (menu != null) {
-      var menuItems = menu.querySelectorAll('nav > a');
-      if (menuItems.length > 0) {
-        menuItems.forEach(function (menuItem) {
-          menuItem.onclick = function (e) {
-            // Reset the menu and pages
-            for (i = 0, n = menuItems.length; i < n; i++) {
-              menuItems[i].classList.remove('active');
-            }
-            for (i = 0, n = pages.length; i < n; i++) {
-              pages[i].classList.add('invisible');
-            }
-
-            this.classList.add('active');
-            var activePage = this.innerText.toLowerCase();
-            var page = document.querySelector('#' + activePage);
-
-            if (page != null) {
-              page.classList.remove('invisible');
-            }
-          };
-        });
-      }
-    }
-  </script>
 </body>
 
 </html>
