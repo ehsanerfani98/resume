@@ -478,8 +478,9 @@ section {
   color: #050d18;
 }
 
+/* changed */
 .resume .resume-item {
-  padding: 0 0 20px 20px;
+  padding: 0 20px 20px 0;
   margin-top: -2px;
   border-right: 2px solid #1f5297;
   position: relative;
@@ -869,8 +870,9 @@ section {
   transition: all 0.3s ease-in-out;
 }
 
+/* changed */
 .contact .info h4 {
-  padding: 0 0 0 60px;
+  padding: 0 60px 0 0;
   font-size: 22px;
   font-weight: 600;
   margin-bottom: 5px;
@@ -878,7 +880,7 @@ section {
 }
 
 .contact .info p {
-  padding: 0 0 10px 60px;
+  padding: 0 60px 10px 0;
   margin-bottom: 20px;
   font-size: 14px;
   color: #173b6c;
